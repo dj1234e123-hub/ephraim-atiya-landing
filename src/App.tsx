@@ -1,6 +1,6 @@
 import { Mark, Wordmark } from "./components/Logo";
 import { Section, Heading } from "./components/Section";
-import { FloatingWhatsApp, WhatsAppCta, WhatsAppIcon } from "./components/WhatsApp";
+import { FloatingWhatsApp, PhoneCta, WhatsAppCta, WhatsAppIcon } from "./components/WhatsApp";
 import { Reveal } from "./components/Reveal";
 import { Mockup } from "./components/Mockup";
 import { TopBar } from "./components/TopBar";
@@ -74,16 +74,11 @@ function Hero() {
             <p className="mt-5 max-w-xl font-title text-2xl leading-snug text-cream sm:text-3xl">{heroConcrete}</p>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-cream/75 sm:text-lg">{brand.essence}</p>
 
-            <WhatsAppCta className="mt-9 w-full sm:w-auto" />
-            <p className="mt-4 text-sm text-cream/60">
-              <a href={PHONE_TEL} className="hover:text-cream" dir="ltr">
-                {PHONE_DISPLAY}
-              </a>
-              <span className="mx-2" aria-hidden="true">
-                ·
-              </span>
-              {contact.area}
-            </p>
+            <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+              <WhatsAppCta className="w-full sm:w-auto" />
+              <PhoneCta className="w-full sm:w-auto" />
+            </div>
+            <p className="mt-4 text-sm text-cream/60">{contact.area}</p>
           </div>
 
           <Reveal className="hidden lg:block" delay={400}>
@@ -232,8 +227,9 @@ function Services() {
 
       <Reveal>
         <p className="mt-10 text-center text-navy/70">{servicesNote}</p>
-        <div className="mt-10 text-center">
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <WhatsAppCta variant="navy" className="w-full sm:w-auto" />
+          <PhoneCta variant="navy" className="w-full sm:w-auto" />
         </div>
       </Reveal>
     </Section>
@@ -383,7 +379,10 @@ function Closing() {
           <h2 id="contact-title" className="font-title text-3xl font-medium leading-tight sm:text-5xl">
             {brand.closing}
           </h2>
-          <WhatsAppCta className="mt-10 w-full sm:w-auto" />
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <WhatsAppCta className="w-full sm:w-auto" />
+            <PhoneCta className="w-full sm:w-auto" />
+          </div>
 
           <ol className="mx-auto mt-10 max-w-md space-y-3 text-start">
             {afterContact.map((line, i) => (

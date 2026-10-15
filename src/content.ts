@@ -2,6 +2,7 @@ export const WHATSAPP_URL = "https://wa.me/972508221842";
 export const PHONE_DISPLAY = "050-822-1842";
 export const PHONE_TEL = "tel:+972508221842";
 export const CTA_LABEL = "לשיחת היכרות חינם בוואטסאפ";
+export const PHONE_CTA_LABEL = "או להתקשר";
 export const DEMO_URL = "https://demo.ephraim-atiya.com/";
 
 export const brand = {
@@ -182,7 +183,7 @@ export const faq = [
 
 /** מה קורה אחרי לחיצה על הכפתור. מוריד את החשש מהצעד הראשון. */
 export const afterContact = [
-  "כותבים לי בוואטסאפ כמה מילים על המוסד או העסק.",
+  "כותבים לי בוואטסאפ, או מתקשרים, וכמה מילים על המוסד או העסק.",
   "קובעים שיחה של 30 דקות, בלי עלות ובלי התחייבות.",
   "בסופה אתם יודעים אם מערכת תעזור לכם, ומה הצעד הבא.",
 ];

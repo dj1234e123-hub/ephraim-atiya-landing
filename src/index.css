@@ -42,6 +42,13 @@
   .btn-whatsapp-navy {
     @apply btn-whatsapp bg-navy text-cream hover:bg-[#1c2d52];
   }
+  /* כפתור טלפון: מתאר בלבד, לצד כפתור הוואטסאפ. למי שאין וואטסאפ (טלפון כשר). */
+  .btn-phone-cream {
+    @apply btn-whatsapp border-2 border-cream/60 text-cream hover:border-cream hover:bg-cream/10;
+  }
+  .btn-phone-navy {
+    @apply btn-whatsapp border-2 border-navy/40 text-navy hover:border-navy hover:bg-navy/5;
+  }
 }
 
 /* ---------- תנועה ---------- */

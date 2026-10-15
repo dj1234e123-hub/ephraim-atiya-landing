@@ -1,4 +1,4 @@
-import { CTA_LABEL, WHATSAPP_URL } from "../content";
+import { CTA_LABEL, PHONE_CTA_LABEL, PHONE_DISPLAY, PHONE_TEL, WHATSAPP_URL } from "../content";
 
 export function WhatsAppIcon({ className = "h-6 w-6" }: { className?: string }) {
   return (
@@ -17,6 +17,34 @@ export function WhatsAppCta({ variant = "gold", className = "", label = CTA_LABE
     <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={`${cls} ${className}`}>
       <WhatsAppIcon />
       <span>{label}</span>
+    </a>
+  );
+}
+
+export function PhoneIcon({ className = "h-6 w-6" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.75">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"
+      />
+    </svg>
+  );
+}
+
+/** כפתור טלפון לצד הוואטסאפ, למי שאין וואטסאפ. קישור חיוג ישיר. */
+export function PhoneCta({ variant = "cream", className = "" }: { variant?: "cream" | "navy"; className?: string }) {
+  const cls = variant === "cream" ? "btn-phone-cream" : "btn-phone-navy";
+  return (
+    <a href={PHONE_TEL} className={`${cls} ${className}`}>
+      <PhoneIcon />
+      <span className="whitespace-nowrap">
+        {PHONE_CTA_LABEL}{" "}
+        <span dir="ltr" className="font-medium">
+          {PHONE_DISPLAY}
+        </span>
+      </span>
     </a>
   );
 }
