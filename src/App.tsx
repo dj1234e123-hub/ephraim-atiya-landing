@@ -302,19 +302,31 @@ function DayAfter() {
   );
 }
 
-/* 6. הסיפור שלי */
+/* 6. הסיפור שלי, עם תמונה */
 function Story() {
   return (
     <Section tone="cream" id="story" labelledBy="story-title">
-      <Reveal className="mx-auto max-w-3xl">
-        <Heading id="story-title" eyebrow="אודות" title={story.title} tone="cream" align="start" />
-        {story.paragraphs.map((p) => (
-          <p key={p} className="mb-5 text-lg leading-relaxed text-navy/85 sm:text-xl">
-            {p}
-          </p>
-        ))}
-        <p className="mt-8 font-title text-2xl text-gold-deep">{brand.slogan}</p>
-      </Reveal>
+      <div className="mx-auto grid max-w-4xl items-start gap-10 md:grid-cols-[auto_1fr]">
+        <Reveal className="mx-auto md:mx-0 md:pt-2">
+          <img
+            src="/ephraim.jpg"
+            width={560}
+            height={560}
+            alt="אפרים עטיה"
+            loading="lazy"
+            className="h-40 w-40 rounded-full object-cover ring-2 ring-gold-deep ring-offset-4 ring-offset-cream sm:h-48 sm:w-48"
+          />
+        </Reveal>
+        <Reveal>
+          <Heading id="story-title" eyebrow="אודות" title={story.title} tone="cream" align="start" />
+          {story.paragraphs.map((p) => (
+            <p key={p} className="mb-5 text-lg leading-relaxed text-navy/85 sm:text-xl">
+              {p}
+            </p>
+          ))}
+          <p className="mt-8 font-title text-2xl text-gold-deep">{brand.slogan}</p>
+        </Reveal>
+      </div>
     </Section>
   );
 }
