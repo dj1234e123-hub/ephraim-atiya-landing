@@ -38,7 +38,13 @@ function Shell() {
     history.replaceState(null, "", `#${tab}`);
     window.scrollTo({ top: 0 });
     track("journal_screen", { screen: tab });
-  }, [tab]);
+    if (tab === "habits") dispatch({ type: "tour_step", step: "streak" });
+  }, [tab, dispatch]);
+  const tourDone = state.tour.done.length;
+  useEffect(() => {
+    if (tourDone > 0) track("journal_tour_step", { steps: tourDone });
+    if (tourDone === 3) track("journal_tour_done");
+  }, [tourDone]);
 
   const name = state.profile.name;
   const title = name ? `היומן של ${name}` : "היומן שלי";

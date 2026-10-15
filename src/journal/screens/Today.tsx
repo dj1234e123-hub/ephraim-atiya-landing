@@ -2,7 +2,9 @@ import { useState } from "react";
 import { useStore } from "../store";
 import { Check, Bar } from "../ui";
 import { EntrySheet, TaskSheet } from "../sheets";
-import { isScheduled, streaks, MOOD_LABEL, TIMES } from "../seed";
+import { isScheduled, streaks, MOOD_LABEL, TIMES, TOUR } from "../seed";
+import { whatsappUrl } from "../brand";
+import { track } from "../../analytics";
 import { dueLabel, greeting, hebrewDate, longDate } from "../dates";
 
 export function Today({ go }: { go: (tab: string) => void }) {
@@ -36,6 +38,8 @@ export function Today({ go }: { go: (tab: string) => void }) {
         </div>
         {doneCount === scheduled.length && scheduled.length > 0 && <p className="mt-2 text-sm text-gold">כל הקביעויות של היום סומנו. יום שלם.</p>}
       </div>
+
+      {!state.tour.dismissed && <Tour />}
 
       <section className="card mb-4" aria-labelledby="today-habits">
         <div className="mb-1 flex items-center justify-between">
@@ -140,5 +144,61 @@ export function Today({ go }: { go: (tab: string) => void }) {
       {entryOpen && <EntrySheet day={today} existing={entry} onClose={() => setEntryOpen(false)} />}
       <TaskSheet open={taskOpen} onClose={() => setTaskOpen(false)} today={today} />
     </div>
+  );
+}
+
+/** הסיור: שלושה צעדים שמי שעושה אותם כבר הרגיש את היומן. בסוף, הכפתור. */
+function Tour() {
+  const { state, dispatch } = useStore();
+  const done = state.tour.done;
+  const all = done.length === TOUR.length;
+  const name = state.profile.name;
+  return (
+    <section className="card mb-4 border-2" style={{ borderColor: "var(--accent)" }} aria-labelledby="tour-title">
+      <div className="mb-2 flex items-center justify-between gap-3">
+        <h2 id="tour-title" className="font-medium" style={{ color: "var(--accent)" }}>
+          {all ? "ככה זה מרגיש כשזה שלכם." : "שלושה דברים לנסות"}
+        </h2>
+        <button type="button" className="text-xs text-navy/50 underline-offset-2 hover:underline" onClick={() => dispatch({ type: "tour_dismiss" })} aria-label="לסגור את הסיור">
+          {all ? "סגירה" : "דלגו"}
+        </button>
+      </div>
+      {all ? (
+        <>
+          <p className="text-sm leading-relaxed text-navy/70">
+            סימנתם, ראיתם את הרצף, וסיכמתם יום. ביומן האמיתי זה נראה בדיוק כך, עם הקביעויות והתחומים שלכם, על השם שלכם, במסך הבית של הטלפון.
+          </p>
+          <a
+            href={whatsappUrl(state.profile, "demo")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-accent mt-3 w-full"
+            onClick={() => track("whatsapp_click", { location: "journal-tour", named: !!name })}
+          >
+            {name ? `${name}, רוצים כזה? לשיחה בוואטסאפ` : "רוצים כזה? לשיחה בוואטסאפ"}
+          </a>
+        </>
+      ) : (
+        <ol className="space-y-2">
+          {TOUR.map((t, i) => {
+            const on = done.includes(t.id);
+            return (
+              <li key={t.id} className="flex items-center gap-3 text-sm">
+                <span className={`check !h-7 !w-7 ${on ? "on" : ""}`} aria-hidden="true">
+                  {on ? (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <span className="text-xs text-navy/50">{i + 1}</span>
+                  )}
+                </span>
+                <span className={on ? "text-navy/50 line-through" : ""}>{t.text}</span>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+    </section>
   );
 }

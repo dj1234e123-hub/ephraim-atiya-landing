@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from "react";
-import { buildSeed, DEFAULT_PROFILE, type Area, type Habit, type Mood, type Profile, type State, type TimeOfDay } from "./seed";
+import { buildSeed, DEFAULT_PROFILE, type Area, type Habit, type Mood, type Profile, type State, type TimeOfDay, type TourStep } from "./seed";
 import { todayKey } from "./dates";
 import { brandFromUrl, loadBrand, saveBrand } from "./brand";
 
@@ -16,11 +16,14 @@ export type Action =
   | { type: "task_update"; id: string; due: string | null; area: Area }
   | { type: "task_remove"; id: string }
   | { type: "entry_save"; day: string; mood: Mood; good: string; tomorrow: string }
+  | { type: "tour_step"; step: TourStep }
+  | { type: "tour_dismiss" }
   | { type: "reset" };
 
 let seq = 1000;
 const nid = (p: string) => `${p}${++seq}`;
 const note = (s: State, text: string): string[] => [text, ...s.actions].slice(0, 6);
+const step = (s: State, id: TourStep) => (s.tour.done.includes(id) ? s.tour : { ...s.tour, done: [...s.tour.done, id] });
 
 function reducer(s: State, a: Action): State {
   const today = todayKey();
@@ -34,7 +37,7 @@ function reducer(s: State, a: Action): State {
       const on = cur.includes(a.id);
       const next = on ? cur.filter((x) => x !== a.id) : [...cur, a.id];
       const h = s.habits.find((x) => x.id === a.id);
-      return { ...s, log: { ...s.log, [a.day]: next }, actions: on ? s.actions : note(s, `סומנה קביעות: ${h?.name ?? ""}`) };
+      return { ...s, log: { ...s.log, [a.day]: next }, actions: on ? s.actions : note(s, `סומנה קביעות: ${h?.name ?? ""}`), tour: on ? s.tour : step(s, "habit") };
     }
     case "habit_add": {
       const h: Habit = { id: nid("h"), name: a.name.trim(), area: a.area, time: a.time, days: a.days };
@@ -60,8 +63,12 @@ function reducer(s: State, a: Action): State {
     case "entry_save": {
       const e = { day: a.day, mood: a.mood, good: a.good.trim(), tomorrow: a.tomorrow.trim() };
       const rest = s.entries.filter((x) => x.day !== a.day);
-      return { ...s, entries: [e, ...rest].sort((x, y) => y.day.localeCompare(x.day)), actions: note(s, "נשמר סיכום יום") };
+      return { ...s, entries: [e, ...rest].sort((x, y) => y.day.localeCompare(x.day)), actions: note(s, "נשמר סיכום יום"), tour: step(s, "entry") };
     }
+    case "tour_step":
+      return { ...s, tour: step(s, a.step) };
+    case "tour_dismiss":
+      return { ...s, tour: { ...s.tour, dismissed: true } };
     case "reset":
       return buildSeed({ ...DEFAULT_PROFILE, onboarded: false });
   }
@@ -85,6 +92,7 @@ function load(): State {
     /* localStorage לא זמין: מתחילים מהזרע */
   }
   if (!s) s = buildSeed();
+  if (!s.tour) s = { ...s, tour: { done: [], dismissed: false } };
   if (fromUrl) return { ...s, profile: { ...fromUrl, onboarded: true } };
   if (!s.profile.onboarded && fromLanding && fromLanding.name) return { ...s, profile: { ...fromLanding, onboarded: true } };
   return s;

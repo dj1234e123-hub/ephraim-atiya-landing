@@ -398,6 +398,20 @@ function Journal() {
           <Heading id="journal-title" eyebrow={journal.eyebrow} title={journal.title} tone="navy" align="start" />
           <p className="max-w-2xl text-lg leading-relaxed text-cream/85 sm:text-xl">{journal.lead}</p>
           <p className="mt-5 max-w-2xl border-r-2 border-gold/60 pr-4 text-base leading-relaxed text-cream/70">{journal.personal}</p>
+          {journal.video.src && (
+            <figure className="mt-6 max-w-2xl">
+              <video
+                className="w-full max-w-[280px] rounded-[1.6rem] border border-cream/20 bg-[#0d1730]"
+                src={journal.video.src}
+                poster={journal.video.poster || undefined}
+                controls
+                playsInline
+                preload="metadata"
+                onPlay={() => track("journal_video_play")}
+              />
+              <figcaption className="mt-2 text-sm text-cream/60">{journal.video.caption}</figcaption>
+            </figure>
+          )}
 
           <div className="mt-8 flex flex-wrap items-baseline gap-x-4 gap-y-1">
             <p className="font-title text-4xl font-medium text-gold">{journal.price}</p>
@@ -475,32 +489,18 @@ function Journal() {
         <p className="mt-3 text-sm text-cream/60">{journal.demoHint}</p>
       </Reveal>
 
-      <div className="mx-auto mt-16 grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.4fr]">
-        <Reveal>
-          <h3 className="font-title text-2xl font-medium text-gold">{journal.who.title}</h3>
-          <ul className="mt-5 space-y-5">
-            {journal.who.items.map((w) => (
-              <li key={w.title} className="border-r border-gold/40 pr-4">
-                <p className="font-title text-xl font-medium">{w.title}</p>
-                <p className="mt-1 leading-relaxed text-cream/75">{w.text}</p>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-        <Reveal delay={120}>
-          <h3 className="font-title text-2xl font-medium text-gold">{journal.inside.title}</h3>
-          <ul className="mt-5 grid gap-4 sm:grid-cols-2">
-            {journal.inside.items.map((it) => (
-              <li key={it.title} className="rounded-2xl border border-cream/15 bg-cream/5 p-5">
-                <p className="font-title text-lg font-medium">{it.title}</p>
-                <p className="mt-1 text-sm leading-relaxed text-cream/75">{it.text}</p>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-      </div>
+      <Reveal className="mx-auto mt-14 max-w-6xl">
+        <p className="max-w-3xl text-lg leading-relaxed text-cream/85">{journal.who}</p>
+        <ul className="mt-5 flex flex-wrap gap-2" aria-label="מה יש בפנים">
+          {journal.inside.map((it) => (
+            <li key={it} className="rounded-full border border-cream/20 bg-cream/5 px-4 py-1.5 text-sm text-cream/85">
+              {it}
+            </li>
+          ))}
+        </ul>
+      </Reveal>
 
-      <Reveal className="mx-auto mt-12 max-w-6xl">
+      <Reveal className="mx-auto mt-8 max-w-6xl">
         <ol className="grid gap-4 sm:grid-cols-2">
           {journal.tiers.map((t) => (
             <li key={t.price} className="flex gap-4 rounded-2xl border border-gold/40 p-6">

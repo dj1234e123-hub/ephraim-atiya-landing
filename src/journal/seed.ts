@@ -32,7 +32,16 @@ export type State = {
   entries: Entry[];
   /** מה המבקר עשה בהדגמה (מוצג במסך היום) */
   actions: string[];
+  /** הסיור: אילו משלושת הצעדים הושלמו, והאם המבקר סגר את הכרטיס */
+  tour: { done: TourStep[]; dismissed: boolean };
 };
+
+export type TourStep = "habit" | "streak" | "entry";
+export const TOUR: Array<{ id: TourStep; text: string }> = [
+  { id: "habit", text: "סמנו קביעות אחת שעשיתם היום" },
+  { id: "streak", text: "פתחו את \"התמדה\" וראו את הרצף" },
+  { id: "entry", text: "סכמו את היום בשלוש שורות" },
+];
 
 export const MOOD_LABEL: Record<Mood, string> = { 1: "יום קשה", 2: "יום בסדר", 3: "יום טוב" };
 
@@ -114,7 +123,7 @@ export function buildSeed(profile: Profile = DEFAULT_PROFILE, now: Date = new Da
     { day: d(-8), mood: 2, good: "הקביעות בבוקר מחזיקה גם כשהכול מתפזר.", tomorrow: "לקבוע עם רואה החשבון." },
   ];
 
-  return { version: 1, today, profile, habits, log, tasks, entries, actions: [] };
+  return { version: 1, today, profile, habits, log, tasks, entries, actions: [], tour: { done: [], dismissed: false } };
 }
 
 /** רצף נוכחי ורצף שיא של קביעות, לפי הימים שבהם היא מתוכננת. */
