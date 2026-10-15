@@ -4,8 +4,8 @@ import { Today } from "./screens/Today";
 import { Habits } from "./screens/Habits";
 import { Tasks } from "./screens/Tasks";
 import { Diary } from "./screens/Diary";
-import { Sheet, WA } from "./ui";
-import { ACCENTS, type AccentId } from "./seed";
+import { Sheet } from "./ui";
+import { ACCENTS, accentColor, whatsappUrl, type AccentId } from "./brand";
 import { track } from "../analytics";
 
 type Tab = "today" | "habits" | "tasks" | "diary";
@@ -18,7 +18,7 @@ const TABS: Array<{ id: Tab; label: string; icon: string }> = [
 
 /** הצבע הנבחר נכנס כמשתני CSS על עטיפת האפליקציה. */
 function accentVars(id: AccentId) {
-  const c = ACCENTS.find((a) => a.id === id)?.color ?? ACCENTS[0].color;
+  const c = accentColor(id);
   return { "--accent": c, "--accent-soft": c + "1f" } as React.CSSProperties;
 }
 
@@ -71,13 +71,13 @@ function Shell() {
       </main>
 
       <a
-        href={WA}
+        href={whatsappUrl(state.profile, "demo")}
         target="_blank"
         rel="noopener noreferrer"
         className="btn-gold fixed bottom-[76px] left-1/2 z-30 w-[calc(100%-2rem)] max-w-[26rem] -translate-x-1/2 shadow-card"
-        onClick={() => track("whatsapp_click", { location: "journal-demo" })}
+        onClick={() => track("whatsapp_click", { location: "journal-demo", named: !!name })}
       >
-        רוצים יומן כזה על השם שלכם? לשיחה בוואטסאפ
+        {name ? `${name}, רוצים יומן כזה על השם שלכם? לשיחה בוואטסאפ` : "רוצים יומן כזה על השם שלכם? לשיחה בוואטסאפ"}
       </a>
 
       <nav className="nav" aria-label="ניווט">

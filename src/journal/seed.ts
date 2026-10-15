@@ -16,13 +16,8 @@ export type Task = { id: string; title: string; area: Area; due: string | null; 
 export type Mood = 1 | 2 | 3;
 export type Entry = { day: string; mood: Mood; good: string; tomorrow: string };
 
-export type AccentId = "gold" | "olive" | "wine" | "sea";
-export const ACCENTS: Array<{ id: AccentId; name: string; color: string }> = [
-  { id: "gold", name: "זהב", color: "#A57B2C" },
-  { id: "olive", name: "זית", color: "#4F6F3A" },
-  { id: "wine", name: "בורדו", color: "#7A2E3B" },
-  { id: "sea", name: "ים", color: "#2B5F8A" },
-];
+export { ACCENTS, type AccentId } from "./brand";
+import type { AccentId } from "./brand";
 
 export type Profile = { name: string; accent: AccentId; onboarded: boolean };
 

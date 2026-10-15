@@ -1,8 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { AREAS, type Area } from "./seed";
 
-export const WA = "https://wa.me/972508221842?text=" + encodeURIComponent("שלום אפרים, ניסיתי את הדגמת היומן האישי באתר ואשמח לשמוע עוד.");
-
 export function Sheet({ open, onClose, title, children }: { open: boolean; onClose: () => void; title: string; children: ReactNode }) {
   useEffect(() => {
     if (!open) return;

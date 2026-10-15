@@ -6,8 +6,6 @@ export const PHONE_CTA_LABEL = "או להתקשר";
 export const DEMO_URL = "https://demo.ephraim-atiya.com/";
 /** הדגמת היומן האישי: עמוד בתוך האתר (נבנה יחד עם דף הנחיתה, ר׳ vite.config.ts). */
 export const JOURNAL_DEMO_URL = "/journal/";
-export const JOURNAL_WHATSAPP_URL =
-  "https://wa.me/972508221842?text=" + encodeURIComponent("שלום אפרים, ראיתי את היומן האישי באתר ואשמח לשמוע עוד.");
 
 export const brand = {
   name: "אפרים עטיה",
@@ -246,7 +244,9 @@ export const journal = {
   priceNote: "לפי מה שנכנס פנימה. בלי אפיון נפרד: שיחת היכרות אחת, ובה מגדירים יחד.",
   cta: "לשיחה על היומן שלך",
   demoCta: "לנסות את ההדגמה",
-  demoHint: "נפתחת בדפדפן, בלי התקנה. אפשר לכתוב את השם שלכם ולראות איך זה מרגיש.",
+  demoHint: "ההדגמה נפתחת בדפדפן, בלי התקנה, כבר על השם והצבע שבחרתם.",
+  tryTitle: "איך קוראים לכם?",
+  tryHint: "כתבו שם ובחרו צבע, והטלפון שלמטה הופך לשלכם.",
   who: {
     title: "למי זה",
     items: [

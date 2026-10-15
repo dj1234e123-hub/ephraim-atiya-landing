@@ -1,9 +1,11 @@
+import { useState, type CSSProperties } from "react";
 import { Mark, Wordmark } from "./components/Logo";
 import { Section, Heading } from "./components/Section";
 import { FloatingWhatsApp, PhoneCta, WhatsAppCta, WhatsAppIcon } from "./components/WhatsApp";
 import { Reveal } from "./components/Reveal";
 import { Mockup } from "./components/Mockup";
 import { JournalMockup } from "./components/JournalMockup";
+import { ACCENTS, cleanName, DEFAULT_BRAND, demoUrl, loadBrand, saveBrand, whatsappUrl, type AccentId, type Brand } from "./journal/brand";
 import { TopBar } from "./components/TopBar";
 import { track } from "./analytics";
 import { Faq } from "./components/Faq";
@@ -20,7 +22,6 @@ import {
   heroConcrete,
   journal,
   JOURNAL_DEMO_URL,
-  JOURNAL_WHATSAPP_URL,
   PHONE_DISPLAY,
   PHONE_TEL,
   promise,
@@ -377,11 +378,22 @@ function DayAfter() {
   );
 }
 
-/* 5ג. היומן האישי הממותג: הפרויקט הקטן ביותר, לאדם אחד. עם הדמיה וקישור להדגמה חיה. */
+/* 5ג. היומן האישי הממותג: הפרויקט הקטן ביותר, לאדם אחד. הטלפון בסקשן חי: שם וצבע של המבקר. */
 function Journal() {
+  const [brand, setBrand] = useState<Brand>(() => loadBrand() ?? DEFAULT_BRAND);
+  const [named, setNamed] = useState(false);
+  const update = (patch: Partial<Brand>) => {
+    const next = { ...brand, ...patch };
+    setBrand(next);
+    saveBrand(next);
+  };
+  const name = brand.name.trim();
+  const demoHref = demoUrl(JOURNAL_DEMO_URL, brand);
+  const waHref = whatsappUrl(brand, "landing");
+
   return (
     <Section tone="navy" id="journal" labelledBy="journal-title">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_auto]">
+      <div className="mx-auto grid max-w-6xl items-start gap-12 lg:grid-cols-[1fr_auto]">
         <Reveal>
           <Heading id="journal-title" eyebrow={journal.eyebrow} title={journal.title} tone="navy" align="start" />
           <p className="max-w-2xl text-lg leading-relaxed text-cream/85 sm:text-xl">{journal.lead}</p>
@@ -391,35 +403,77 @@ function Journal() {
             <p className="font-title text-4xl font-medium text-gold">{journal.price}</p>
             <p className="text-sm text-cream/60">{journal.priceNote}</p>
           </div>
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <a
-              href={JOURNAL_DEMO_URL}
-              className="btn-whatsapp-gold w-full sm:w-auto"
-              onClick={() => track("journal_demo_click", { location: "journal" })}
-            >
-              {journal.demoCta}
-            </a>
-            <a
-              href={JOURNAL_WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-phone-cream w-full sm:w-auto"
-              onClick={() => track("whatsapp_click", { location: "journal", label: journal.cta })}
-            >
-              <WhatsAppIcon />
-              <span>{journal.cta}</span>
-            </a>
-          </div>
-          <p className="mt-3 text-sm text-cream/60">{journal.demoHint}</p>
         </Reveal>
 
-        <Reveal delay={200} className="mx-auto">
-          <a href={JOURNAL_DEMO_URL} aria-label="לפתוח את הדגמת היומן" onClick={() => track("journal_demo_click", { location: "journal-mockup" })}>
-            <JournalMockup />
+        <Reveal delay={150} className="mx-auto w-full max-w-sm lg:w-auto">
+          <div className="mb-5 rounded-2xl border border-gold/40 bg-cream/5 p-4">
+            <label htmlFor="journal-name" className="block font-title text-xl font-medium text-gold">
+              {journal.tryTitle}
+            </label>
+            <p className="mt-1 text-sm text-cream/70">{journal.tryHint}</p>
+            <input
+              id="journal-name"
+              className="mt-3 min-h-[48px] w-full rounded-xl border border-cream/20 bg-navy px-4 text-base text-cream placeholder:text-cream/40 focus:border-gold focus:outline-none"
+              placeholder="שם פרטי"
+              value={brand.name}
+              maxLength={24}
+              autoComplete="given-name"
+              onChange={(e) => {
+                update({ name: e.target.value });
+                if (!named && cleanName(e.target.value)) {
+                  setNamed(true);
+                  track("journal_named", { location: "landing" });
+                }
+              }}
+            />
+            <div className="mt-3 flex items-center gap-3" role="radiogroup" aria-label="הצבע שלכם">
+              {ACCENTS.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={brand.accent === a.id}
+                  aria-label={a.name}
+                  className="journal-swatch"
+                  style={{ background: a.color } as CSSProperties}
+                  onClick={() => {
+                    update({ accent: a.id as AccentId });
+                    track("journal_accent", { location: "landing", accent: a.id });
+                  }}
+                >
+                  {brand.accent === a.id && (
+                    <svg viewBox="0 0 24 24" className="h-5 w-5 text-white" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+          <a href={demoHref} aria-label="לפתוח את הדגמת היומן" onClick={() => track("journal_demo_click", { location: "journal-mockup", named: !!name })}>
+            <JournalMockup brand={brand} />
           </a>
         </Reveal>
       </div>
+
+      <Reveal className="mx-auto mt-10 max-w-6xl">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a href={demoHref} className="btn-whatsapp-gold w-full sm:w-auto" onClick={() => track("journal_demo_click", { location: "journal", named: !!name })}>
+            {name ? `לפתוח את היומן של ${name}` : journal.demoCta}
+          </a>
+          <a
+            href={waHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-phone-cream w-full sm:w-auto"
+            onClick={() => track("whatsapp_click", { location: "journal", label: journal.cta, named: !!name })}
+          >
+            <WhatsAppIcon />
+            <span>{journal.cta}</span>
+          </a>
+        </div>
+        <p className="mt-3 text-sm text-cream/60">{journal.demoHint}</p>
+      </Reveal>
 
       <div className="mx-auto mt-16 grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.4fr]">
         <Reveal>

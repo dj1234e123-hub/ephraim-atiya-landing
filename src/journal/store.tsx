@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from "react";
 import { buildSeed, DEFAULT_PROFILE, type Area, type Habit, type Mood, type Profile, type State, type TimeOfDay } from "./seed";
 import { todayKey } from "./dates";
+import { brandFromUrl, loadBrand, saveBrand } from "./brand";
 
 const KEY = "demo_journal_v1";
 
@@ -67,18 +68,26 @@ function reducer(s: State, a: Action): State {
 }
 
 function load(): State {
+  // קישור אישי (?name=&accent=) גובר על הכול: ההדגמה נפתחת כבר על השם, בלי מסך פתיחה
+  const fromUrl = brandFromUrl();
+  // מי שכתב את השם בדף הנחיתה, מגיע לכאן כשהוא כבר מוכר
+  const fromLanding = loadBrand();
+  let s: State | null = null;
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
-      const s = JSON.parse(raw) as State;
-      if (s.version === 1 && s.today === todayKey()) return s;
+      const saved = JSON.parse(raw) as State;
+      if (saved.version === 1 && saved.today === todayKey()) s = saved;
       // יום חדש: הנתונים הבדיוניים נבנים מחדש, אבל השם והצבע נשארים
-      if (s.version === 1 && s.profile) return buildSeed(s.profile);
+      else if (saved.version === 1 && saved.profile) s = buildSeed(saved.profile);
     }
   } catch {
     /* localStorage לא זמין: מתחילים מהזרע */
   }
-  return buildSeed();
+  if (!s) s = buildSeed();
+  if (fromUrl) return { ...s, profile: { ...fromUrl, onboarded: true } };
+  if (!s.profile.onboarded && fromLanding && fromLanding.name) return { ...s, profile: { ...fromLanding, onboarded: true } };
+  return s;
 }
 
 const Ctx = createContext<{ state: State; dispatch: (a: Action) => void } | null>(null);
@@ -91,6 +100,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } catch {
       /* best effort */
     }
+    saveBrand({ name: state.profile.name, accent: state.profile.accent });
   }, [state]);
   const value = useMemo(() => ({ state, dispatch }), [state]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
