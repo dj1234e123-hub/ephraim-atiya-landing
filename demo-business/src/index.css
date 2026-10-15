@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Heebo", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --color-brand: #1e3a4c;
+  --color-brand-dark: #142a38;
+  --color-accent: #1f9aa0;
+  --color-accent-dark: #177c81;
+  --color-ground: #f4f6f8;
+}
+
+html { font-family: var(--font-sans); background: var(--color-ground); -webkit-tap-highlight-color: transparent; }
+body { margin: 0; color: #0f172a; }
+input, select, textarea, button { font: inherit; }
+input[type=number] { -moz-appearance: textfield; }
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; }

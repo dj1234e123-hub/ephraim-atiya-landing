@@ -2,7 +2,7 @@ import { Mark, Wordmark } from "./components/Logo";
 import { Section, Heading } from "./components/Section";
 import { FloatingWhatsApp, PhoneCta, WhatsAppCta, WhatsAppIcon } from "./components/WhatsApp";
 import { Reveal } from "./components/Reveal";
-import { Mockup } from "./components/Mockup";
+import { BusinessMockup, Mockup } from "./components/Mockup";
 import { TopBar } from "./components/TopBar";
 import { track } from "./analytics";
 import { Faq } from "./components/Faq";
@@ -13,6 +13,7 @@ import {
   contact,
   dayAfter,
   DEMO_URL,
+  demos,
   differentiator,
   facts,
   heroConcrete,
@@ -45,6 +46,7 @@ export default function App() {
         <Promise />
         <Differentiator />
         <Services />
+        <Demos />
         <Process />
         <DayAfter />
         <Story />
@@ -225,11 +227,11 @@ function Services() {
             <div className={`mt-6 border-t pt-4 ${s.highlight ? "border-gold/40" : "border-gold-deep/30"}`}>
               <p className={`font-title text-2xl font-medium ${s.highlight ? "text-gold" : "text-gold-deep"}`}>{s.price}</p>
               {s.note && <p className={`mt-1 text-sm ${s.highlight ? "text-cream/70" : "text-navy/60"}`}>{s.note}</p>}
-              {s.title === "מערכת ניהול לבית כנסת" && (
+              {s.demoUrl && (
                 <a
-                  href={DEMO_URL}
+                  href={s.demoUrl}
                   className="mt-2 inline-block text-sm font-medium text-gold-deep underline-offset-4 hover:underline"
-                  onClick={() => track("demo_click", { location: "services" })}
+                  onClick={() => track("demo_click", { location: "services", demo: s.demoUrl === DEMO_URL ? "shul" : "business" })}
                 >
                   לראות הדגמה חיה ←
                 </a>
@@ -246,6 +248,61 @@ function Services() {
           <PhoneCta variant="navy" className="w-full sm:w-auto" location="services" />
         </div>
       </Reveal>
+    </Section>
+  );
+}
+
+/* 4ב. הדגמות חיות: שתי מערכות שאפשר לפתוח וללחוץ על הכול */
+function Demos() {
+  return (
+    <Section tone="navy" id="demos" labelledBy="demos-title" arches={false}>
+      <Reveal>
+        <Heading id="demos-title" eyebrow="דוגמאות חיות" title="מערכות שבניתי. לנסות בעצמכם." tone="navy" />
+        <p className="mx-auto -mt-6 mb-12 max-w-2xl text-center text-lg leading-relaxed text-cream/75">
+          בלי התחברות ובלי להשאיר פרטים. הנתונים בדיוניים, אפשר ללחוץ על הכול, ולאפס.
+        </p>
+      </Reveal>
+
+      <ul className="grid gap-10 lg:grid-cols-2 lg:gap-8">
+        {demos.map((d, i) => (
+          <Reveal
+            as="li"
+            key={d.id}
+            delay={i * 150}
+            className="flex flex-col items-center gap-6 rounded-3xl border border-cream/15 bg-cream/5 p-7 sm:p-8"
+          >
+            <a
+              href={d.url}
+              aria-label={d.cta}
+              className="demo-phone shrink-0 transition hover:scale-[1.03]"
+              onClick={() => track("demo_click", { location: "demos-mockup", demo: d.id })}
+            >
+              {d.id === "shul" ? <Mockup /> : <BusinessMockup />}
+            </a>
+            <div className="flex flex-col items-center text-center">
+              <p className="eyebrow text-gold">{d.eyebrow}</p>
+              <h3 className="mt-2 font-title text-2xl font-medium leading-tight sm:text-3xl">{d.title}</h3>
+              <p className="mt-1 text-sm text-cream/60">{d.who}</p>
+              <p className="mt-4 leading-relaxed text-cream/85">{d.text}</p>
+              <ul className="mt-4 space-y-1.5 text-start text-cream/80">
+                {d.points.map((pt) => (
+                  <li key={pt} className="flex items-start gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" aria-hidden="true" />
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={d.url}
+                className="mt-6 inline-flex min-h-[48px] items-center justify-center rounded-full bg-gold px-6 font-medium text-navy transition hover:bg-cream"
+                onClick={() => track("demo_click", { location: "demos", demo: d.id })}
+              >
+                {d.cta}
+              </a>
+            </div>
+          </Reveal>
+        ))}
+      </ul>
     </Section>
   );
 }
@@ -367,7 +424,18 @@ function Testimonials() {
         {testimonials.map((t, i) => (
           <Reveal as="li" key={t.quote} delay={i * 100} className="flex flex-col justify-between rounded-2xl border border-cream/15 bg-cream/5 p-7">
             <blockquote className="text-lg leading-relaxed text-cream/90">{t.quote}</blockquote>
-            <footer className="mt-6 border-t border-gold/40 pt-4 text-sm text-gold">{t.who}</footer>
+            <footer className="mt-6 flex items-center justify-between gap-3 border-t border-gold/40 pt-4 text-sm text-gold">
+              <span>{t.who}</span>
+              {t.demoUrl && (
+                <a
+                  href={t.demoUrl}
+                  className="border-b border-gold/60 text-cream/80 hover:text-gold"
+                  onClick={() => track("demo_click", { location: "testimonials", demo: t.demoUrl === DEMO_URL ? "shul" : "business" })}
+                >
+                  {t.demoLabel}
+                </a>
+              )}
+            </footer>
           </Reveal>
         ))}
       </ul>

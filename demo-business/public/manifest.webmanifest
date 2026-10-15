@@ -1,0 +1,11 @@
+{
+  "name": "הדגמה · ניהול עסק אינסטלציה",
+  "short_name": "הדגמה",
+  "start_url": "/",
+  "display": "standalone",
+  "dir": "rtl",
+  "lang": "he",
+  "background_color": "#f4f6f8",
+  "theme_color": "#14213D",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

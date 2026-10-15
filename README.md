@@ -17,6 +17,7 @@ npm run preview  # תצוגה של הבנייה
 ## עמודים
 
 - `/` דף הנחיתה · `/terms/` תנאי מסירה ושירות · `/accessibility/` הצהרת נגישות ופרטיות
+- `demo/` הדגמת בית הכנסת (demo.ephraim-atiya.com) · `demo-business/` הדגמת עסק האינסטלציה (business.ephraim-atiya.com), כל אחת פרויקט Vite נפרד עם README משלו
 - `public/robots.txt`, `public/sitemap.xml`: לעדכן אם מוסיפים עמוד
 
 ## מה נשאר למלא

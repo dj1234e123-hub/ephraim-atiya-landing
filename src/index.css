@@ -134,6 +134,9 @@
     @apply mx-auto w-[260px] sm:w-[300px];
     filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.35));
   }
+  .demo-phone .mockup {
+    @apply w-[240px] sm:w-[260px];
+  }
   .mockup-phone {
     @apply rounded-[2.2rem] border border-cream/20 bg-[#0d1730] p-3;
   }

@@ -4,6 +4,7 @@ export const PHONE_TEL = "tel:+972508221842";
 export const CTA_LABEL = "לשיחת היכרות חינם בוואטסאפ";
 export const PHONE_CTA_LABEL = "או להתקשר";
 export const DEMO_URL = "https://demo.ephraim-atiya.com/";
+export const BUSINESS_DEMO_URL = "https://business.ephraim-atiya.com/";
 
 export const brand = {
   name: "אפרים עטיה",
@@ -48,6 +49,8 @@ export type Service = {
   price: string;
   note?: string;
   highlight?: boolean;
+  /** הדגמה חיה של מערכת מהסוג הזה, אם יש. */
+  demoUrl?: string;
 };
 
 export const services: Service[] = [
@@ -72,11 +75,13 @@ export const services: Service[] = [
     title: "מערכת ניהול לבית כנסת",
     desc: "מתפללים, תרומות ונדרים, עליות, חגים, תחזוקה.",
     price: "החל מ-6,000 ₪",
+    demoUrl: DEMO_URL,
   },
   {
     title: "מערכת ניהול לעסק",
     desc: "לקוחות, עבודות, הצעות מחיר, תשלומים. הכול מהטלפון.",
     price: "החל מ-5,000 ₪",
+    demoUrl: BUSINESS_DEMO_URL,
   },
   {
     title: "ליווי ותמיכה חודשית",
@@ -106,17 +111,21 @@ export const story = {
  * המלצות מלקוחות (גבאי בית כנסת ובעלי עסקים). נוסחים פשוטים, בלי שמות ובלי מספרים.
  * לפני פרסום שם או שם עסק ליד ציטוט, לקבל אישור מהלקוח.
  */
-export type Testimonial = { quote: string; who: string };
+export type Testimonial = { quote: string; who: string; demoUrl?: string; demoLabel?: string };
 export const testimonials: Testimonial[] = [
   {
     quote:
       "אפרים לא עשה את זה מרחוק. הוא ישב איתנו בבית הכנסת, פנים מול פנים, עד שהכול עבד. היום הנדרים, העליות והתרומות במקום אחד, ואני פנוי לתפילה.",
     who: "גבאי בית כנסת",
+    demoUrl: DEMO_URL,
+    demoLabel: "לראות את המערכת",
   },
   {
     quote:
       "חיפשתי מישהו שיבין איך אני עובד, לא שימכור לי תוכנה. אפרים ישב איתי, ירד לכל פרט, ובנה לי בדיוק את זה. לקוחות, הצעות מחיר ותשלומים, הכול מהטלפון.",
     who: "בעל עסק",
+    demoUrl: BUSINESS_DEMO_URL,
+    demoLabel: "לראות את המערכת",
   },
   {
     quote:
@@ -206,3 +215,40 @@ export const dayAfter = {
     "המערכת רצה על שירותי ענן שנפתחים על שמכם. עלות השרת, לרוב קטנה, משולמת ישירות לספק ואינה כלולה במחיר הבנייה.",
   termsLabel: "תנאי המסירה המלאים",
 };
+
+/**
+ * הדגמות חיות: מערכות שבנויות כמו האמיתיות, עם נתונים בדיוניים, שאפשר ללחוץ על הכול.
+ * מערכת האינסטלציה היא העתק של המערכת שנבנתה לאלישע (באישורו), בתוספת הצעות מחיר.
+ */
+export type Demo = {
+  id: "shul" | "business";
+  eyebrow: string;
+  title: string;
+  who: string;
+  text: string;
+  points: string[];
+  url: string;
+  cta: string;
+};
+export const demos: Demo[] = [
+  {
+    id: "shul",
+    eyebrow: "מערכת ניהול לבית כנסת",
+    title: "בית הכנסת, במבט אחד",
+    who: 'דוגמה: בית כנסת "מנחת יהודה"',
+    text: "מה שגבאי מנהל היום בפתקים, באקסל ובזיכרון: מי עולה בשבת, מי נדר ומי שילם, תרומות, אירועים ותקלות בבניין.",
+    points: ["שיבוץ עליות לפרשת השבוע", "נדרים ותרומות, עם תזכורות", "תחזוקה: מה פתוח ומי מטפל"],
+    url: DEMO_URL,
+    cta: "לפתוח את הדגמת בית הכנסת",
+  },
+  {
+    id: "business",
+    eyebrow: "מערכת ניהול לעסק",
+    title: "העסק של אלישע, מהטלפון",
+    who: "המערכת שבניתי לעסק אינסטלציה של שני שותפים",
+    text: "זאת המערכת שאלישע עובד איתה כל יום, עם נתונים בדיוניים. קריאה חדשה בשלושה צעדים, יומן לשניהם, סגירת יום אחת בערב, וגבייה שלא נשכחת.",
+    points: ["קריאות, יומן ופרויקטים לשני השותפים", "סגירת יום: שעות, מחיר ותשלום במסך אחד", "הצעות מחיר שהופכות לקריאה באישור הלקוח"],
+    url: BUSINESS_DEMO_URL,
+    cta: "לפתוח את הדגמת העסק",
+  },
+];
