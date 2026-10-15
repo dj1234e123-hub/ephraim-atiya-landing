@@ -13,6 +13,7 @@ import {
   servicesNote,
   steps,
   story,
+  testimonials,
   WHATSAPP_URL,
 } from "./content";
 
@@ -229,21 +230,34 @@ function Story() {
   );
 }
 
-/* 7. המלצות — placeholder. אין להמציא המלצות; יתמלא רק בציטוטים אמיתיים. */
+/* 7. המלצות — נוסחים לדוגמה עד שלקוח אמיתי מאשר אותם בשמו (sample: true מציג סימון "דוגמה"). */
 function Testimonials() {
-  const slots = [1, 2, 3];
+  const anySample = testimonials.some((t) => t.sample);
   return (
     <Section tone="navy" id="testimonials" labelledBy="testimonials-title" arches={false}>
       <Heading id="testimonials-title" eyebrow="מה אומרים" title="המלצות" tone="navy" />
-      <p className="mx-auto mb-10 max-w-xl text-center text-cream/70">המלצות מלקוחות יתווספו כאן בקרוב.</p>
+      {anySample && (
+        <p className="mx-auto mb-10 max-w-xl text-center text-cream/70">
+          הנוסחים המסומנים "דוגמה" הם טיוטות, עד שהלקוחות יאשרו אותם בשמם.
+        </p>
+      )}
       <ul className="grid gap-5 sm:grid-cols-3">
-        {slots.map((n) => (
+        {testimonials.map((t) => (
           <li
-            key={n}
-            className="flex min-h-[200px] flex-col justify-between rounded-2xl border border-dashed border-cream/30 p-7 text-cream/50"
+            key={t.quote}
+            className={`relative flex flex-col justify-between rounded-2xl border p-7 ${
+              t.sample ? "border-dashed border-cream/30" : "border-cream/15 bg-cream/5"
+            }`}
           >
-            <p className="font-title text-xl">[המלצה {n}]</p>
-            <p className="text-sm">[שם · תפקיד · מוסד]</p>
+            {t.sample && (
+              <span className="absolute left-5 top-5 rounded-full border border-gold/60 px-3 py-1 text-xs font-medium text-gold">
+                דוגמה
+              </span>
+            )}
+            <blockquote className="pt-6 text-lg leading-relaxed text-cream/90">{t.quote}</blockquote>
+            <footer className={`mt-6 border-t pt-4 text-sm ${t.sample ? "border-cream/15 text-cream/50" : "border-gold/40 text-gold"}`}>
+              {t.who}
+            </footer>
           </li>
         ))}
       </ul>
