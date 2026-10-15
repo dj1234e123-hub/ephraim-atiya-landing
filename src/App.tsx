@@ -120,6 +120,15 @@ function Facts() {
         <Reveal className="lg:hidden">
           <div className="mb-10">
             <Mockup />
+            <p className="mt-5 text-center">
+              <a
+                href={DEMO_URL}
+                className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-gold/70 px-6 text-base font-medium text-gold hover:bg-gold/10"
+                onClick={() => track("demo_click", { location: "mobile-mockup" })}
+              >
+                לפתוח את ההדגמה ולנסות בעצמכם
+              </a>
+            </p>
           </div>
         </Reveal>
         <ul className="grid gap-6 sm:grid-cols-3">
