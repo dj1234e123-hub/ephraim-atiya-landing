@@ -14,6 +14,12 @@ npm run build    # בנייה ל-dist/
 npm run preview  # תצוגה של הבנייה
 ```
 
+## עמודים
+
+- `/` דף הנחיתה · `/terms/` תנאי מסירה ושירות · `/accessibility/` הצהרת נגישות ופרטיות
+- `public/robots.txt`, `public/sitemap.xml`: לעדכן אם מוסיפים עמוד
+
 ## מה נשאר למלא
 
-- המלצות: `Testimonials` ב-`src/App.tsx` מציג placeholder. להחליף רק בציטוטים אמיתיים.
+- המלצות (`testimonials` ב-`src/content.ts`): להוסיף שם ותחום ליד ציטוט רק באישור הלקוח.
+- פוטר: מספר עוסק/ח.פ. וכתובת מייל, כשיימסרו.

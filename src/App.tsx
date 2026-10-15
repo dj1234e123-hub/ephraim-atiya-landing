@@ -342,38 +342,18 @@ function Story() {
   );
 }
 
-/* 7. המלצות — נוסחים לדוגמה עד שלקוח אמיתי מאשר אותם בשמו (sample: true מציג סימון "דוגמה"). */
+/* 7. המלצות */
 function Testimonials() {
-  const anySample = testimonials.some((t) => t.sample);
   return (
     <Section tone="navy" id="testimonials" labelledBy="testimonials-title" arches={false}>
       <Reveal>
         <Heading id="testimonials-title" eyebrow="מה אומרים" title="המלצות" tone="navy" />
-        {anySample && (
-          <p className="mx-auto mb-10 max-w-xl text-center text-cream/70">
-            הנוסחים המסומנים "דוגמה" הם טיוטות, עד שהלקוחות יאשרו אותם בשמם.
-          </p>
-        )}
       </Reveal>
       <ul className="grid gap-5 sm:grid-cols-3">
         {testimonials.map((t, i) => (
-          <Reveal
-            as="li"
-            key={t.quote}
-            delay={i * 100}
-            className={`relative flex flex-col justify-between rounded-2xl border p-7 ${
-              t.sample ? "border-dashed border-cream/30" : "border-cream/15 bg-cream/5"
-            }`}
-          >
-            {t.sample && (
-              <span className="absolute left-5 top-5 rounded-full border border-gold/60 px-3 py-1 text-xs font-medium text-gold">
-                דוגמה
-              </span>
-            )}
-            <blockquote className="pt-6 text-lg leading-relaxed text-cream/90">{t.quote}</blockquote>
-            <footer className={`mt-6 border-t pt-4 text-sm ${t.sample ? "border-cream/15 text-cream/50" : "border-gold/40 text-gold"}`}>
-              {t.who}
-            </footer>
+          <Reveal as="li" key={t.quote} delay={i * 100} className="flex flex-col justify-between rounded-2xl border border-cream/15 bg-cream/5 p-7">
+            <blockquote className="text-lg leading-relaxed text-cream/90">{t.quote}</blockquote>
+            <footer className="mt-6 border-t border-gold/40 pt-4 text-sm text-gold">{t.who}</footer>
           </Reveal>
         ))}
       </ul>
@@ -469,6 +449,12 @@ function Closing() {
           </span>
           <a href="/terms/" className="hover:text-gold">
             תנאי מסירה
+          </a>
+          <span className="mx-2" aria-hidden="true">
+            ·
+          </span>
+          <a href="/accessibility/" className="hover:text-gold">
+            נגישות ופרטיות
           </a>
         </p>
       </div>
