@@ -1,8 +1,11 @@
+import { useState, type CSSProperties } from "react";
 import { Mark, Wordmark } from "./components/Logo";
 import { Section, Heading } from "./components/Section";
 import { FloatingWhatsApp, PhoneCta, WhatsAppCta, WhatsAppIcon } from "./components/WhatsApp";
 import { Reveal } from "./components/Reveal";
 import { BusinessMockup, Mockup } from "./components/Mockup";
+import { JournalMockup } from "./components/JournalMockup";
+import { ACCENTS, cleanName, DEFAULT_BRAND, demoUrl, loadBrand, saveBrand, whatsappUrl, type AccentId, type Brand } from "./journal/brand";
 import { TopBar } from "./components/TopBar";
 import { track } from "./analytics";
 import { Faq } from "./components/Faq";
@@ -16,7 +19,10 @@ import {
   demos,
   differentiator,
   facts,
+  gabbaiWeek,
   heroConcrete,
+  journal,
+  JOURNAL_DEMO_URL,
   PHONE_DISPLAY,
   PHONE_TEL,
   promise,
@@ -44,11 +50,13 @@ export default function App() {
         <Hero />
         <Facts />
         <Promise />
+        <GabbaiWeek />
         <Differentiator />
         <Services />
         <Demos />
         <Process />
         <DayAfter />
+        <Journal />
         <Story />
         <Testimonials />
         <FaqSection />
@@ -179,6 +187,40 @@ function ArrowLeft({ className = "" }: { className?: string }) {
   );
 }
 
+/* 2ב. השבוע של גבאי: הכאב האחד וההבטחה */
+function GabbaiWeek() {
+  return (
+    <Section tone="navy" id="gabbai" labelledBy="gabbai-title">
+      <Reveal className="mx-auto max-w-3xl text-center">
+        <Heading id="gabbai-title" eyebrow={gabbaiWeek.eyebrow} title={gabbaiWeek.title} tone="navy" />
+        <p className="text-lg leading-relaxed text-cream/85 sm:text-xl">{gabbaiWeek.intro}</p>
+      </Reveal>
+
+      <ol className="mx-auto mt-12 max-w-4xl space-y-3">
+        {gabbaiWeek.moments.map((m, i) => (
+          <Reveal as="li" key={m.when} delay={i * 80} className="grid gap-2 rounded-2xl border border-cream/10 bg-cream/5 p-5 sm:grid-cols-[8rem_1fr_1fr] sm:gap-5">
+            <p className="font-title text-xl text-gold">{m.when}</p>
+            <p className="text-cream/70"><span className="text-xs text-cream/50">היום: </span>{m.today}</p>
+            <p className="text-cream"><span className="text-xs text-gold/80">עם המערכת: </span>{m.system}</p>
+          </Reveal>
+        ))}
+      </ol>
+
+      <Reveal className="mx-auto mt-14 max-w-2xl text-center">
+        <p className="text-xl leading-relaxed text-cream/85 sm:text-2xl">{gabbaiWeek.pain}</p>
+        <p className="mt-3 font-title text-4xl text-gold sm:text-5xl">{gabbaiWeek.promise}</p>
+        <a
+          href={DEMO_URL}
+          className="btn-phone-cream mt-8 inline-flex"
+          onClick={() => track("demo_click", { location: "gabbai-week" })}
+        >
+          {gabbaiWeek.demoLabel}
+        </a>
+      </Reveal>
+    </Section>
+  );
+}
+
 /* 3. מה מבדל אותי */
 function Differentiator() {
   return (
@@ -227,6 +269,15 @@ function Services() {
             <div className={`mt-6 border-t pt-4 ${s.highlight ? "border-gold/40" : "border-gold-deep/30"}`}>
               <p className={`font-title text-2xl font-medium ${s.highlight ? "text-gold" : "text-gold-deep"}`}>{s.price}</p>
               {s.note && <p className={`mt-1 text-sm ${s.highlight ? "text-cream/70" : "text-navy/60"}`}>{s.note}</p>}
+              {s.journal && (
+                <a
+                  href="#journal"
+                  className="mt-2 inline-block text-sm font-medium text-gold-deep underline-offset-4 hover:underline"
+                  onClick={() => track("journal_section_click", { location: "services" })}
+                >
+                  מה זה, ולמי ←
+                </a>
+              )}
               {s.demoUrl && (
                 <a
                   href={s.demoUrl}
@@ -380,6 +431,145 @@ function DayAfter() {
           </a>
         </Reveal>
       </div>
+    </Section>
+  );
+}
+
+/* 5ג. היומן האישי הממותג: הפרויקט הקטן ביותר, לאדם אחד. הטלפון בסקשן חי: שם וצבע של המבקר. */
+function Journal() {
+  const [brand, setBrand] = useState<Brand>(() => loadBrand() ?? DEFAULT_BRAND);
+  const [named, setNamed] = useState(false);
+  const update = (patch: Partial<Brand>) => {
+    const next = { ...brand, ...patch };
+    setBrand(next);
+    saveBrand(next);
+  };
+  const name = brand.name.trim();
+  const demoHref = demoUrl(JOURNAL_DEMO_URL, brand);
+  const waHref = whatsappUrl(brand, "landing");
+
+  return (
+    <Section tone="navy" id="journal" labelledBy="journal-title">
+      <div className="mx-auto grid max-w-6xl items-start gap-12 lg:grid-cols-[1fr_auto]">
+        <Reveal>
+          <Heading id="journal-title" eyebrow={journal.eyebrow} title={journal.title} tone="navy" align="start" />
+          <p className="max-w-2xl text-lg leading-relaxed text-cream/85 sm:text-xl">{journal.lead}</p>
+          <p className="mt-5 max-w-2xl border-r-2 border-gold/60 pr-4 text-base leading-relaxed text-cream/70">{journal.personal}</p>
+          {journal.video.src && (
+            <figure className="mt-6 max-w-2xl">
+              <video
+                className="w-full max-w-[280px] rounded-[1.6rem] border border-cream/20 bg-[#0d1730]"
+                src={journal.video.src}
+                poster={journal.video.poster || undefined}
+                controls
+                playsInline
+                preload="metadata"
+                onPlay={() => track("journal_video_play")}
+              />
+              <figcaption className="mt-2 text-sm text-cream/60">{journal.video.caption}</figcaption>
+            </figure>
+          )}
+
+          <div className="mt-8 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <p className="font-title text-4xl font-medium text-gold">{journal.price}</p>
+            <p className="text-sm text-cream/60">{journal.priceNote}</p>
+          </div>
+        </Reveal>
+
+        <Reveal delay={150} className="mx-auto w-full max-w-sm lg:w-auto">
+          <div className="mb-5 rounded-2xl border border-gold/40 bg-cream/5 p-4">
+            <label htmlFor="journal-name" className="block font-title text-xl font-medium text-gold">
+              {journal.tryTitle}
+            </label>
+            <p className="mt-1 text-sm text-cream/70">{journal.tryHint}</p>
+            <input
+              id="journal-name"
+              className="mt-3 min-h-[48px] w-full rounded-xl border border-cream/20 bg-navy px-4 text-base text-cream placeholder:text-cream/40 focus:border-gold focus:outline-none"
+              placeholder="שם פרטי"
+              value={brand.name}
+              maxLength={24}
+              autoComplete="given-name"
+              onChange={(e) => {
+                update({ name: e.target.value });
+                if (!named && cleanName(e.target.value)) {
+                  setNamed(true);
+                  track("journal_named", { location: "landing" });
+                }
+              }}
+            />
+            <div className="mt-3 flex items-center gap-3" role="radiogroup" aria-label="הצבע שלכם">
+              {ACCENTS.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={brand.accent === a.id}
+                  aria-label={a.name}
+                  className="journal-swatch"
+                  style={{ background: a.color } as CSSProperties}
+                  onClick={() => {
+                    update({ accent: a.id as AccentId });
+                    track("journal_accent", { location: "landing", accent: a.id });
+                  }}
+                >
+                  {brand.accent === a.id && (
+                    <svg viewBox="0 0 24 24" className="h-5 w-5 text-white" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+          <a href={demoHref} aria-label="לפתוח את הדגמת היומן" onClick={() => track("journal_demo_click", { location: "journal-mockup", named: !!name })}>
+            <JournalMockup brand={brand} />
+          </a>
+        </Reveal>
+      </div>
+
+      <Reveal className="mx-auto mt-10 max-w-6xl">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a href={demoHref} className="btn-whatsapp-gold w-full sm:w-auto" onClick={() => track("journal_demo_click", { location: "journal", named: !!name })}>
+            {name ? `לפתוח את היומן של ${name}` : journal.demoCta}
+          </a>
+          <a
+            href={waHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-phone-cream w-full sm:w-auto"
+            onClick={() => track("whatsapp_click", { location: "journal", label: journal.cta, named: !!name })}
+          >
+            <WhatsAppIcon />
+            <span>{journal.cta}</span>
+          </a>
+        </div>
+        <p className="mt-3 text-sm text-cream/60">{journal.demoHint}</p>
+      </Reveal>
+
+      <Reveal className="mx-auto mt-14 max-w-6xl">
+        <p className="max-w-3xl text-lg leading-relaxed text-cream/85">{journal.who}</p>
+        <ul className="mt-5 flex flex-wrap gap-2" aria-label="מה יש בפנים">
+          {journal.inside.map((it) => (
+            <li key={it} className="rounded-full border border-cream/20 bg-cream/5 px-4 py-1.5 text-sm text-cream/85">
+              {it}
+            </li>
+          ))}
+        </ul>
+      </Reveal>
+
+      <Reveal className="mx-auto mt-8 max-w-6xl">
+        <ol className="grid gap-4 sm:grid-cols-2">
+          {journal.tiers.map((t) => (
+            <li key={t.price} className="flex gap-4 rounded-2xl border border-gold/40 p-6">
+              <p className="shrink-0 font-title text-2xl font-medium text-gold">{t.price}</p>
+              <div>
+                <p className="font-title text-xl font-medium">{t.title}</p>
+                <p className="mt-1 leading-relaxed text-cream/75">{t.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
     </Section>
   );
 }

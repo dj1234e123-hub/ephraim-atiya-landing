@@ -184,6 +184,30 @@
   .mockup-cta {
     @apply mt-4 rounded-full bg-navy py-2 text-center text-[11px] text-cream;
   }
+  /* הטלפון החי של היומן: הצבע מגיע מהמבקר (--accent) */
+  .mockup-greet {
+    @apply -mt-2 mb-3 font-title text-xl font-medium;
+    color: var(--accent);
+    transition: color 0.3s ease;
+  }
+  .mockup-journal .mockup-list .dot.on,
+  .mockup-journal .mockup-cta {
+    background: var(--accent);
+    transition: background-color 0.3s ease;
+  }
+  .mockup-journal .mockup-stat b:first-child {
+    color: var(--accent);
+  }
+  .mockup-journal .mockup-badge {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .journal-swatch {
+    @apply flex h-11 w-11 items-center justify-center rounded-full transition;
+  }
+  .journal-swatch[aria-checked="true"] {
+    @apply ring-2 ring-cream ring-offset-2 ring-offset-navy;
+  }
 
   /* קו התהליך מצטייר */
   .process-line {

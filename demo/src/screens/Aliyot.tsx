@@ -4,7 +4,10 @@ import { ScreenTitle, Sheet, WaPreview, fmtDate } from "../components/ui";
 import { daysBetween } from "../lib/dates";
 import type { Member } from "../seed";
 
-function reason(m: Member, today: string): { text: string; score: number } {
+function reason(m: Member, today: string, slot?: string | null): { text: string; score: number } {
+  if (slot === "ראשון" && m.tribe === "כהן") return { text: "כהן", score: 110 };
+  if (slot === "שני" && m.tribe === "לוי") return { text: "לוי", score: 110 };
+  if ((slot === "ראשון" || slot === "שני") && !m.tribe) return { text: slot === "ראשון" ? "ישראל (ראשון לכהן)" : "ישראל (שני ללוי)", score: 5 };
   if (m.guest) return { text: "אורח השבת", score: 90 };
   if (m.yahrzeit) return { text: "יארצייט השבוע", score: 100 };
   if (!m.lastAliyah) return { text: "עדיין לא קיבל עלייה", score: 80 };
@@ -23,10 +26,10 @@ export function Aliyot() {
     return state.members
       .filter((m) => !taken.has(m.id))
       .filter((m) => !q || m.name.includes(q))
-      .map((m) => ({ m, r: reason(m, state.today) }))
+      .map((m) => ({ m, r: reason(m, state.today, slot) }))
       .sort((a, b) => b.r.score - a.r.score)
       .slice(0, q ? 20 : 8);
-  }, [state.members, state.today, q, state.aliyot]);
+  }, [state.members, state.today, q, state.aliyot, slot]);
 
   const assigned = state.aliyot.filter((a) => a.memberId).length;
   const text = `סידור עליות, פרשת ${state.parsha.name}, שבת ${fmtDate(state.parsha.shabbat)}:\n` + state.aliyot.map((a) => `${a.name}: ${a.memberId ? byId.get(a.memberId)?.name : "—"}`).join("\n");
@@ -54,9 +57,13 @@ export function Aliyot() {
         })}
       </div>
 
-      <button className="btn-navy mt-4 w-full" onClick={() => setPreview(true)} disabled={assigned === 0}>
-        לשלוח את הסידור לגבאי השני
-      </button>
+      <div className="mt-4 flex gap-2">
+        <button className="btn-navy flex-1" onClick={() => setPreview(true)} disabled={assigned === 0}>
+          לשלוח לגבאי השני
+        </button>
+        <a href="#print/aliyot" className="btn-line flex-1">כרטיס לבימה</a>
+      </div>
+      <p className="mt-2 text-center text-xs text-navy/50">ראשון לכהן, שני ללוי, השאר לפי התור. אזכרה ואורח קודמים. לכל מי ששובץ יוצאת תזכורת ביום חמישי.</p>
 
       <Sheet open={slot !== null} onClose={() => setSlot(null)} title={`שיבוץ: ${slot ?? ""}`}>
         {slot && state.aliyot.find((a) => a.key === slot)?.memberId && (
