@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useStore } from "../store";
 import { ScreenTitle, Sheet, WaPreview, fmtDate } from "../components/ui";
 import { nis, type Member } from "../seed";
+import { track } from "../analytics";
 
 const PURPOSES = ["עלייה לתורה", "מי שברך", "קידוש", "נר תמיד", "תחזוקה"];
 
@@ -19,7 +20,7 @@ export function Members() {
   const open = nedarim.filter((n) => !n.paid);
   const openSum = open.reduce((s, n) => s + n.amount, 0);
   const firstName = m?.name.split(" ")[0] ?? "";
-  const remindText = `שלום ${firstName}, זו תזכורת ידידותית מבית הכנסת מנחת יהודה: נדרים פתוחים על סך ${nis(openSum)} (${open.map((n) => n.purpose).join(", ")}). אפשר להסדיר בביט או במזומן לגבאי. תזכו למצוות!`;
+  const remindText = `שלום ${firstName}, זו תזכורת ידידותית מבית הכנסת ${state.shul.name}: נדרים פתוחים על סך ${nis(openSum)} (${open.map((n) => n.purpose).join(", ")}). אפשר להסדיר בביט או במזומן לגבאי. תזכו למצוות!`;
 
   return (
     <div className="fade">
@@ -47,11 +48,13 @@ export function Members() {
         {m && mode === "card" && (
           <>
             <p className="text-sm text-navy/60">{m.street} · {m.phone}</p>
-            <p className="mt-1 text-sm text-navy/60">עלייה אחרונה: {m.lastAliyah ? fmtDate(m.lastAliyah) : "לא נרשמה"}{m.note ? ` · ${m.note}` : ""}</p>
+            <p className="mt-1 text-sm text-navy/60">עלייה אחרונה: {m.lastAliyah ? fmtDate(m.lastAliyah) : "לא נרשמה"}{m.tribe ? ` · ${m.tribe}` : ""}{m.note ? ` · ${m.note}` : ""}{m.yahrzeit ? ` · אזכרה השבוע (${m.yahrzeitFor})` : ""}</p>
             <div className="mt-4 flex gap-2">
               <button className="btn-navy flex-1" onClick={() => setMode("neder")}>+ נדר</button>
               <button className="btn-gold flex-1" onClick={() => setMode("remind")} disabled={open.length === 0}>תזכורת</button>
+              <a href={`#print/statement/${m.id}`} className="btn-line flex-1" onClick={() => track("demo_print_open", { kind: "statement", from: "members" })}>דף חשבון</a>
             </div>
+            <p className="mt-2 text-xs text-navy/50">דף חשבון מודפס במקום שיחה לא נעימה: מה פתוח, מה שולם, איך משלמים.</p>
             <p className="mb-2 mt-5 font-medium">נדרים {open.length > 0 && <span className="pill-warn">פתוח: {nis(openSum)}</span>}</p>
             {nedarim.length === 0 && <p className="text-sm text-navy/50">אין נדרים רשומים.</p>}
             {nedarim.map((n) => (
