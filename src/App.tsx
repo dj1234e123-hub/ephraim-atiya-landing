@@ -16,6 +16,7 @@ import {
   DEMO_URL,
   differentiator,
   facts,
+  gabbaiWeek,
   heroConcrete,
   journal,
   JOURNAL_DEMO_URL,
@@ -47,6 +48,7 @@ export default function App() {
         <Hero />
         <Facts />
         <Promise />
+        <GabbaiWeek />
         <Differentiator />
         <Services />
         <Process />
@@ -179,6 +181,40 @@ function ArrowLeft({ className = "" }: { className?: string }) {
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
       <path d="M19 12H5M11 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+  );
+}
+
+/* 2ב. השבוע של גבאי: הכאב האחד וההבטחה */
+function GabbaiWeek() {
+  return (
+    <Section tone="navy" id="gabbai" labelledBy="gabbai-title">
+      <Reveal className="mx-auto max-w-3xl text-center">
+        <Heading id="gabbai-title" eyebrow={gabbaiWeek.eyebrow} title={gabbaiWeek.title} tone="navy" />
+        <p className="text-lg leading-relaxed text-cream/85 sm:text-xl">{gabbaiWeek.intro}</p>
+      </Reveal>
+
+      <ol className="mx-auto mt-12 max-w-4xl space-y-3">
+        {gabbaiWeek.moments.map((m, i) => (
+          <Reveal as="li" key={m.when} delay={i * 80} className="grid gap-2 rounded-2xl border border-cream/10 bg-cream/5 p-5 sm:grid-cols-[8rem_1fr_1fr] sm:gap-5">
+            <p className="font-title text-xl text-gold">{m.when}</p>
+            <p className="text-cream/70"><span className="text-xs text-cream/50">היום: </span>{m.today}</p>
+            <p className="text-cream"><span className="text-xs text-gold/80">עם המערכת: </span>{m.system}</p>
+          </Reveal>
+        ))}
+      </ol>
+
+      <Reveal className="mx-auto mt-14 max-w-2xl text-center">
+        <p className="text-xl leading-relaxed text-cream/85 sm:text-2xl">{gabbaiWeek.pain}</p>
+        <p className="mt-3 font-title text-4xl text-gold sm:text-5xl">{gabbaiWeek.promise}</p>
+        <a
+          href={DEMO_URL}
+          className="btn-phone-cream mt-8 inline-flex"
+          onClick={() => track("demo_click", { location: "gabbai-week" })}
+        >
+          {gabbaiWeek.demoLabel}
+        </a>
+      </Reveal>
+    </Section>
   );
 }
 

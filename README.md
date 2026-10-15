@@ -17,6 +17,7 @@ npm run preview  # תצוגה של הבנייה
 ## עמודים
 
 - `/` דף הנחיתה · `/terms/` תנאי מסירה ושירות · `/accessibility/` הצהרת נגישות ופרטיות · `/journal/` הדגמת היומן האישי הממותג (קוד ב-`src/journal/`, תכנון ומיקוד ב-`journal/README.md`)
+- `demo/`: ההדגמה (demo.ephraim-atiya.com). זמנים אמיתיים למיקום, הכנות לשבת, הדפסות ב-`#print/…`. תכנון: `docs/gabbai-plan.md`
 - `public/robots.txt`, `public/sitemap.xml`: לעדכן אם מוסיפים עמוד
 
 ## מה נשאר למלא

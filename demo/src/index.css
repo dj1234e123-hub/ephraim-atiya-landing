@@ -25,7 +25,7 @@
   .input { @apply min-h-[48px] w-full rounded-xl border border-navy/15 bg-white px-4 text-base outline-none focus:border-navy; }
   .sheet-bg { @apply fixed inset-0 z-40 bg-navy/50; }
   .sheet { @apply fixed inset-x-0 bottom-0 z-50 mx-auto max-h-[88svh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-cream p-5 pb-8 shadow-2xl; animation: up .25s ease; }
-  .nav { @apply sticky bottom-0 z-30 grid grid-cols-5 border-t border-navy/10 bg-white/95 backdrop-blur; padding-bottom: env(safe-area-inset-bottom); }
+  .nav { @apply sticky bottom-0 z-30 grid grid-cols-6 border-t border-navy/10 bg-white/95 backdrop-blur; padding-bottom: env(safe-area-inset-bottom); }
   .nav-item { @apply flex min-h-[60px] flex-col items-center justify-center gap-0.5 text-[11px] text-navy/55; }
   .nav-item.on { @apply text-navy; }
   .nav-item svg { @apply h-6 w-6; }
@@ -34,3 +34,27 @@
 @keyframes up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .sheet, .fade { animation: none; } }
+
+/* ---------- הדפסות ---------- */
+.print-wrap { min-height: 100svh; background: #e9e3d6; }
+.print-page { width: 210mm; min-height: 297mm; margin: 0 auto 24px; background: white; padding: 14mm 16mm; box-shadow: 0 10px 40px -20px rgba(20,33,61,.5); color: #14213D; max-width: 100%; }
+.print-head { display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 2px solid #C9A24A; padding-bottom: 8px; margin-bottom: 14px; }
+.print-foot { margin-top: 24px; border-top: 1px solid rgba(20,33,61,.2); padding-top: 6px; font-size: 11px; color: rgba(20,33,61,.6); text-align: center; }
+.print-h1 { font-family: "Frank Ruhl Libre", serif; font-size: 30px; font-weight: 700; text-align: center; margin: 6px 0 16px; }
+.print-h2 { font-family: "Frank Ruhl Libre", serif; font-size: 18px; font-weight: 700; margin-bottom: 6px; border-bottom: 1px solid rgba(201,162,74,.6); }
+.print-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.print-table td, .print-table th { padding: 5px 6px; border-bottom: 1px solid rgba(20,33,61,.12); text-align: start; vertical-align: top; }
+.print-table th { font-weight: 600; font-size: 13px; color: rgba(20,33,61,.7); }
+.print-table-grid td, .print-table-grid th { text-align: center; border: 1px solid rgba(20,33,61,.15); }
+.print-table-grid td:nth-child(2) { text-align: start; }
+.print-big td { font-size: 20px; padding: 9px 6px; }
+.print-list { list-style: disc; padding-inline-start: 18px; font-size: 15px; }
+.print-list li { margin-bottom: 3px; }
+@media (max-width: 640px) { .print-page { padding: 16px; min-height: auto; } .print-h1 { font-size: 24px; } }
+@media print {
+  @page { size: A4; margin: 10mm; }
+  html, body { background: white !important; }
+  .no-print { display: none !important; }
+  .print-wrap { background: white; }
+  .print-page { width: auto; min-height: auto; margin: 0; padding: 0; box-shadow: none; }
+}
