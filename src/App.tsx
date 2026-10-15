@@ -4,6 +4,7 @@ import { FloatingWhatsApp, PhoneCta, WhatsAppCta, WhatsAppIcon } from "./compone
 import { Reveal } from "./components/Reveal";
 import { Mockup } from "./components/Mockup";
 import { TopBar } from "./components/TopBar";
+import { track } from "./analytics";
 import { Faq } from "./components/Faq";
 import {
   afterContact,
@@ -75,8 +76,8 @@ function Hero() {
             <p className="mt-4 max-w-xl text-base leading-relaxed text-cream/75 sm:text-lg">{brand.essence}</p>
 
             <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
-              <WhatsAppCta className="w-full sm:w-auto" />
-              <PhoneCta className="w-full sm:w-auto" />
+              <WhatsAppCta className="w-full sm:w-auto" location="hero" />
+              <PhoneCta className="w-full sm:w-auto" location="hero" />
             </div>
             <p className="mt-4 text-sm text-cream/60">{contact.area}</p>
           </div>
@@ -84,7 +85,7 @@ function Hero() {
           <Reveal className="hidden lg:block" delay={400}>
             <Mockup />
             <p className="mt-4 text-center text-sm text-cream/60">
-              <a href={DEMO_URL} className="border-b border-gold/60 text-gold hover:text-cream">
+              <a href={DEMO_URL} className="border-b border-gold/60 text-gold hover:text-cream" onClick={() => track("demo_click", { location: "hero" })}>
                 לפתוח את ההדגמה ולנסות בעצמכם
               </a>
             </p>
@@ -216,7 +217,11 @@ function Services() {
               <p className={`font-title text-2xl font-medium ${s.highlight ? "text-gold" : "text-gold-deep"}`}>{s.price}</p>
               {s.note && <p className={`mt-1 text-sm ${s.highlight ? "text-cream/70" : "text-navy/60"}`}>{s.note}</p>}
               {s.title === "מערכת ניהול לבית כנסת" && (
-                <a href={DEMO_URL} className="mt-2 inline-block text-sm font-medium text-gold-deep underline-offset-4 hover:underline">
+                <a
+                  href={DEMO_URL}
+                  className="mt-2 inline-block text-sm font-medium text-gold-deep underline-offset-4 hover:underline"
+                  onClick={() => track("demo_click", { location: "services" })}
+                >
                   לראות הדגמה חיה ←
                 </a>
               )}
@@ -228,8 +233,8 @@ function Services() {
       <Reveal>
         <p className="mt-10 text-center text-navy/70">{servicesNote}</p>
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <WhatsAppCta variant="navy" className="w-full sm:w-auto" />
-          <PhoneCta variant="navy" className="w-full sm:w-auto" />
+          <WhatsAppCta variant="navy" className="w-full sm:w-auto" location="services" />
+          <PhoneCta variant="navy" className="w-full sm:w-auto" location="services" />
         </div>
       </Reveal>
     </Section>
@@ -300,7 +305,11 @@ function DayAfter() {
 
         <Reveal className="mt-10 text-center">
           <p className="mx-auto max-w-2xl leading-relaxed text-navy/70">{dayAfter.hosting}</p>
-          <a href="/terms/" className="mt-4 inline-block border-b border-gold-deep font-medium text-gold-deep hover:text-navy">
+          <a
+            href="/terms/"
+            className="mt-4 inline-block border-b border-gold-deep font-medium text-gold-deep hover:text-navy"
+            onClick={() => track("terms_click", { location: "day-after" })}
+          >
             {dayAfter.termsLabel}
           </a>
         </Reveal>
@@ -380,8 +389,8 @@ function Closing() {
             {brand.closing}
           </h2>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <WhatsAppCta className="w-full sm:w-auto" />
-            <PhoneCta className="w-full sm:w-auto" />
+            <WhatsAppCta className="w-full sm:w-auto" location="closing" />
+            <PhoneCta className="w-full sm:w-auto" location="closing" />
           </div>
 
           <ol className="mx-auto mt-10 max-w-md space-y-3 text-start">
@@ -399,7 +408,7 @@ function Closing() {
             <div>
               <dt className="eyebrow text-gold">טלפון</dt>
               <dd className="mt-2 text-lg">
-                <a href={PHONE_TEL} dir="ltr" className="hover:text-gold">
+                <a href={PHONE_TEL} dir="ltr" className="hover:text-gold" onClick={() => track("phone_click", { location: "footer" })}>
                   {PHONE_DISPLAY}
                 </a>
                 <br />
@@ -407,6 +416,7 @@ function Closing() {
                   href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => track("whatsapp_click", { location: "footer" })}
                   className="mt-1 inline-flex items-center gap-2 text-base text-cream/80 hover:text-gold"
                 >
                   <WhatsAppIcon className="h-4 w-4" />

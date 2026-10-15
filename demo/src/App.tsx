@@ -7,6 +7,7 @@ import { Money } from "./screens/Money";
 import { Fix } from "./screens/Fix";
 import { WA } from "./components/ui";
 import { SHUL } from "./seed";
+import { track } from "./analytics";
 
 type Tab = "home" | "aliyot" | "members" | "money" | "fix";
 const TABS: Array<{ id: Tab; label: string; icon: string }> = [
@@ -31,6 +32,7 @@ function Shell() {
   useEffect(() => {
     history.replaceState(null, "", `#${tab}`);
     window.scrollTo({ top: 0 });
+    track("demo_screen", { screen: tab });
   }, [tab]);
 
   return (
@@ -43,7 +45,7 @@ function Shell() {
           </div>
           <div className="flex items-center gap-2">
             <span className="rounded-full border border-gold/70 px-2.5 py-1 text-[11px] font-medium text-gold">הדגמה · נתונים בדיוניים</span>
-            <button className="rounded-full bg-cream/10 px-3 py-1.5 text-xs hover:bg-cream/20" onClick={() => { if (confirm("לאפס את ההדגמה לנקודת ההתחלה?")) dispatch({ type: "reset" }); }}>
+            <button className="rounded-full bg-cream/10 px-3 py-1.5 text-xs hover:bg-cream/20" onClick={() => { if (confirm("לאפס את ההדגמה לנקודת ההתחלה?")) { track("demo_reset"); dispatch({ type: "reset" }); } }}>
               איפוס
             </button>
           </div>

@@ -1,4 +1,5 @@
 import { CTA_LABEL, PHONE_CTA_LABEL, PHONE_DISPLAY, PHONE_TEL, WHATSAPP_URL } from "../content";
+import { track } from "../analytics";
 
 export function WhatsAppIcon({ className = "h-6 w-6" }: { className?: string }) {
   return (
@@ -8,13 +9,19 @@ export function WhatsAppIcon({ className = "h-6 w-6" }: { className?: string }) 
   );
 }
 
-type CtaProps = { variant?: "gold" | "navy"; className?: string; label?: string };
+type CtaProps = { variant?: "gold" | "navy"; className?: string; label?: string; location: string };
 
 /** כפתור הוואטסאפ הראשי. קישור אמיתי לשיחה, נפתח בחלון חדש. */
-export function WhatsAppCta({ variant = "gold", className = "", label = CTA_LABEL }: CtaProps) {
+export function WhatsAppCta({ variant = "gold", className = "", label = CTA_LABEL, location }: CtaProps) {
   const cls = variant === "gold" ? "btn-whatsapp-gold" : "btn-whatsapp-navy";
   return (
-    <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={`${cls} ${className}`}>
+    <a
+      href={WHATSAPP_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`${cls} ${className}`}
+      onClick={() => track("whatsapp_click", { location, label })}
+    >
       <WhatsAppIcon />
       <span>{label}</span>
     </a>
@@ -34,10 +41,10 @@ export function PhoneIcon({ className = "h-6 w-6" }: { className?: string }) {
 }
 
 /** כפתור טלפון לצד הוואטסאפ, למי שאין וואטסאפ. קישור חיוג ישיר. */
-export function PhoneCta({ variant = "cream", className = "" }: { variant?: "cream" | "navy"; className?: string }) {
+export function PhoneCta({ variant = "cream", className = "", location }: { variant?: "cream" | "navy"; className?: string; location: string }) {
   const cls = variant === "cream" ? "btn-phone-cream" : "btn-phone-navy";
   return (
-    <a href={PHONE_TEL} className={`${cls} ${className}`}>
+    <a href={PHONE_TEL} className={`${cls} ${className}`} onClick={() => track("phone_click", { location })}>
       <PhoneIcon />
       <span className="whitespace-nowrap">
         {PHONE_CTA_LABEL}{" "}
@@ -57,6 +64,7 @@ export function FloatingWhatsApp() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="לשיחה בוואטסאפ"
+      onClick={() => track("whatsapp_click", { location: "floating" })}
       className="fixed bottom-5 left-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-gold text-navy shadow-card ring-4 ring-navy/60 transition-transform active:scale-95 md:hidden"
     >
       <WhatsAppIcon className="h-8 w-8" />

@@ -31,7 +31,7 @@ export function AccessibilityPage() {
           <div className="mt-16 rounded-2xl bg-navy p-8 text-center text-cream">
             <p className="font-title text-2xl">משהו לא נגיש או לא ברור?</p>
             <p className="mt-2 text-cream/75">כתבו לי ואטפל בזה.</p>
-            <WhatsAppCta className="mt-6 w-full sm:w-auto" label="לכתוב בוואטסאפ" />
+            <WhatsAppCta className="mt-6 w-full sm:w-auto" label="לכתוב בוואטסאפ" location="accessibility" />
             <p className="mt-4 text-sm text-cream/60">
               <a href={PHONE_TEL} dir="ltr" className="hover:text-cream">
                 {PHONE_DISPLAY}

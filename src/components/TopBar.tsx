@@ -18,7 +18,7 @@ export function TopBar() {
           <Mark className="h-9 w-auto" title="" />
           <Wordmark size="sm" showLatin={false} />
         </a>
-        <WhatsAppCta className="!min-h-[44px] !px-5 !text-base" label="לשיחת היכרות חינם" />
+        <WhatsAppCta className="!min-h-[44px] !px-5 !text-base" label="לשיחת היכרות חינם" location="topbar" />
       </div>
     </div>
   );
