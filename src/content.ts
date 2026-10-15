@@ -2,6 +2,7 @@ export const WHATSAPP_URL = "https://wa.me/972508221842";
 export const PHONE_DISPLAY = "050-822-1842";
 export const PHONE_TEL = "tel:+972508221842";
 export const CTA_LABEL = "לשיחת היכרות חינם בוואטסאפ";
+export const DEMO_URL = "https://demo.ephraim-atiya.com/";
 
 export const brand = {
   name: "אפרים עטיה",

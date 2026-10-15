@@ -11,6 +11,7 @@ import {
   brand,
   contact,
   dayAfter,
+  DEMO_URL,
   differentiator,
   facts,
   heroConcrete,
@@ -87,6 +88,11 @@ function Hero() {
 
           <Reveal className="hidden lg:block" delay={400}>
             <Mockup />
+            <p className="mt-4 text-center text-sm text-cream/60">
+              <a href={DEMO_URL} className="border-b border-gold/60 text-gold hover:text-cream">
+                לפתוח את ההדגמה ולנסות בעצמכם
+              </a>
+            </p>
           </Reveal>
         </div>
       </div>
@@ -214,6 +220,11 @@ function Services() {
             <div className={`mt-6 border-t pt-4 ${s.highlight ? "border-gold/40" : "border-gold-deep/30"}`}>
               <p className={`font-title text-2xl font-medium ${s.highlight ? "text-gold" : "text-gold-deep"}`}>{s.price}</p>
               {s.note && <p className={`mt-1 text-sm ${s.highlight ? "text-cream/70" : "text-navy/60"}`}>{s.note}</p>}
+              {s.title === "מערכת ניהול לבית כנסת" && (
+                <a href={DEMO_URL} className="mt-2 inline-block text-sm font-medium text-gold-deep underline-offset-4 hover:underline">
+                  לראות הדגמה חיה ←
+                </a>
+              )}
             </div>
           </Reveal>
         ))}
