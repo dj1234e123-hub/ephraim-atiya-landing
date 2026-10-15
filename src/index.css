@@ -43,3 +43,178 @@
     @apply btn-whatsapp bg-navy text-cream hover:bg-[#1c2d52];
   }
 }
+
+/* ---------- תנועה ---------- */
+@layer components {
+  /* כניסה בגלילה */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+  html:not(.js) .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* הסמל מצייר את עצמו */
+  .mark-animate .mark-arch {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation: mark-draw 1.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+  }
+  .mark-animate .mark-keystone {
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: mark-drop 0.6s ease-out 1s forwards;
+  }
+  .mark-animate .mark-alef {
+    opacity: 0;
+    animation: mark-fade 0.8s ease 1.3s forwards;
+  }
+  .hero-stagger > * {
+    opacity: 0;
+    animation: mark-fade 0.8s ease forwards;
+  }
+  .hero-stagger > :nth-child(1) { animation-delay: 1.2s; }
+  .hero-stagger > :nth-child(2) { animation-delay: 1.5s; }
+  .hero-stagger > :nth-child(3) { animation-delay: 1.7s; }
+  .hero-stagger > :nth-child(4) { animation-delay: 1.9s; }
+  .hero-stagger > :nth-child(5) { animation-delay: 2.1s; }
+  .hero-stagger > :nth-child(6) { animation-delay: 2.3s; }
+  .hero-stagger > :nth-child(7) { animation-delay: 2.5s; }
+
+  /* כרטיסים מגיבים */
+  .card-lift {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 1px 2px rgba(20, 33, 61, 0.06), 0 20px 40px -18px rgba(20, 33, 61, 0.35);
+  }
+
+  /* הסרגל העליון */
+  .topbar {
+    @apply fixed inset-x-0 top-0 z-40 hidden bg-navy/90 text-cream backdrop-blur md:block;
+    transform: translateY(-100%);
+    transition: transform 0.35s ease;
+    border-bottom: 1px solid rgba(201, 162, 74, 0.35);
+  }
+  .topbar-in {
+    transform: none;
+  }
+
+  /* שאלות */
+  .faq-chev {
+    transition: transform 0.3s ease;
+  }
+  .faq[open] .faq-chev {
+    transform: rotate(180deg);
+  }
+  .faq > summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq[open] > p {
+    animation: mark-fade 0.4s ease;
+  }
+
+  /* הדמיית המסך */
+  .mockup {
+    @apply mx-auto w-[260px] sm:w-[300px];
+    filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.35));
+  }
+  .mockup-phone {
+    @apply rounded-[2.2rem] border border-cream/20 bg-[#0d1730] p-3;
+  }
+  .mockup-screen {
+    @apply overflow-hidden rounded-[1.6rem] bg-cream p-4 text-navy;
+    direction: rtl;
+  }
+  .mockup-top {
+    @apply mb-4 flex items-center justify-between;
+  }
+  .mockup-title {
+    @apply font-title text-base font-medium;
+  }
+  .mockup-badge {
+    @apply rounded-full border border-gold-deep/50 px-2 py-0.5 text-[10px] font-medium text-gold-deep;
+  }
+  .mockup-stats {
+    @apply mb-4 grid grid-cols-3 gap-2;
+  }
+  .mockup-stat {
+    @apply rounded-xl bg-white/80 p-2 text-center;
+  }
+  .mockup-stat b {
+    @apply block font-title text-lg leading-tight text-navy;
+    direction: ltr;
+  }
+  .mockup-stat span {
+    @apply block text-[10px] text-navy/60;
+  }
+  .mockup-list {
+    @apply space-y-2 text-[12px];
+  }
+  .mockup-list li {
+    @apply flex items-center gap-2 rounded-lg bg-white/80 px-2.5 py-2;
+  }
+  .mockup-list li span {
+    @apply ms-auto text-[11px] text-navy/50;
+  }
+  .mockup-list .dot {
+    @apply inline-block h-2 w-2 shrink-0 rounded-full bg-navy/25;
+  }
+  .mockup-list .dot.on {
+    @apply bg-gold-deep;
+  }
+  .mockup-cta {
+    @apply mt-4 rounded-full bg-navy py-2 text-center text-[11px] text-cream;
+  }
+
+  /* קו התהליך מצטייר */
+  .process-line {
+    transform-origin: right center;
+    transform: scaleX(0);
+    transition: transform 1.2s ease 0.3s;
+  }
+  .in .process-line {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes mark-draw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes mark-drop {
+  to { opacity: 1; transform: none; }
+}
+@keyframes mark-fade {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hero-stagger > *,
+  .mark-animate .mark-arch,
+  .mark-animate .mark-keystone,
+  .mark-animate .mark-alef {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+  .process-line {
+    transform: none;
+    transition: none;
+  }
+  .card-lift,
+  .topbar,
+  .faq-chev {
+    transition: none;
+  }
+}

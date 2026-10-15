@@ -2,6 +2,8 @@ import { ALEF_PATH } from "../alef";
 
 type MarkProps = {
   className?: string;
+  /** אנימציית כניסה: הקשת מציירת את עצמה, אבן הראשה יורדת, האות מופיעה. */
+  animate?: boolean;
   /** צבע הקשת והאות. ברירת מחדל: שמנת (על כחול). */
   stroke?: string;
   title?: string;
@@ -10,11 +12,11 @@ type MarkProps = {
 /**
  * הסמל: קשת דקה, אבן ראשה מוזהבת בראשה, האות א בפנים.
  */
-export function Mark({ className = "h-16 w-auto", stroke = "#F6F1E7", title = "הסמל של אפרים עטיה" }: MarkProps) {
+export function Mark({ className = "h-16 w-auto", stroke = "#F6F1E7", title = "הסמל של אפרים עטיה", animate = false }: MarkProps) {
   return (
     <svg
       viewBox="0 0 120 150"
-      className={className}
+      className={`${className} ${animate ? "mark-animate" : ""}`}
       role="img"
       aria-label={title}
       xmlns="http://www.w3.org/2000/svg"
@@ -27,11 +29,12 @@ export function Mark({ className = "h-16 w-auto", stroke = "#F6F1E7", title = "�
         stroke={stroke}
         strokeWidth="4"
         strokeLinecap="round"
+        className="mark-arch"
       />
       {/* אבן הראשה */}
-      <polygon points="47,18 73,18 69,46 51,46" fill="#C9A24A" />
+      <polygon points="47,18 73,18 69,46 51,46" fill="#C9A24A" className="mark-keystone" />
       {/* האות א */}
-      <path d={ALEF_PATH} fill={stroke} />
+      <path d={ALEF_PATH} fill={stroke} className="mark-alef" />
     </svg>
   );
 }
