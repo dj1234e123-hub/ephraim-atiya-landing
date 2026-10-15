@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-navy font-body text-cream antialiased;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: #c9a24a;
+    color: #14213d;
+  }
+  :focus-visible {
+    outline: 2px solid #c9a24a;
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-page px-5 sm:px-8;
+  }
+  .eyebrow {
+    @apply text-sm font-medium tracking-wide;
+  }
+  .btn-whatsapp {
+    @apply inline-flex min-h-[56px] items-center justify-center gap-3 rounded-full px-7 text-lg font-medium transition-transform duration-150 active:scale-[0.98];
+  }
+  .btn-whatsapp-gold {
+    @apply btn-whatsapp bg-gold text-navy hover:bg-[#d5b05e];
+  }
+  .btn-whatsapp-navy {
+    @apply btn-whatsapp bg-navy text-cream hover:bg-[#1c2d52];
+  }
+}
