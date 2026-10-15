@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* הדגמת היומן האישי: אפליקציית טלפון בתוך הדפדפן. צבע ההדגשה (--accent) נבחר על ידי המשתמש. */
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply bg-[#e9e3d6] font-body text-navy antialiased; }
+  :focus-visible { outline: 2px solid var(--accent, #a57b2c); outline-offset: 2px; }
+  textarea { field-sizing: content; }
+}
+
+@layer components {
+  .app { @apply relative mx-auto flex min-h-[100svh] w-full max-w-md flex-col bg-cream shadow-[0_0_60px_-20px_rgba(20,33,61,.5)]; }
+  .card { @apply rounded-2xl bg-white p-4 shadow-card; }
+  .btn { @apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full px-5 font-medium transition active:scale-[.98] disabled:opacity-40; }
+  .btn-navy { @apply btn bg-navy text-cream; }
+  .btn-gold { @apply btn bg-gold text-navy; }
+  .btn-accent { @apply btn text-white; background: var(--accent); }
+  .btn-line { @apply btn border border-navy/20 bg-white text-navy; }
+  .chip { @apply inline-flex min-h-[40px] items-center rounded-full border border-navy/15 bg-white px-4 text-sm transition; }
+  .chip-on { @apply border-navy bg-navy text-cream; }
+  .tag { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium; background: var(--accent-soft); color: var(--accent); }
+  .pill-ok { @apply rounded-full bg-ok/10 px-2.5 py-0.5 text-xs font-medium text-ok; }
+  .pill-warn { @apply rounded-full bg-warn/10 px-2.5 py-0.5 text-xs font-medium text-warn; }
+  .pill-muted { @apply rounded-full bg-navy/5 px-2.5 py-0.5 text-xs font-medium text-navy/60; }
+  .row { @apply flex min-h-[56px] items-center gap-3 border-b border-navy/5 py-2 last:border-b-0; }
+  .input { @apply min-h-[48px] w-full rounded-xl border border-navy/15 bg-white px-4 text-base outline-none focus:border-navy; }
+  .sheet-bg { @apply fixed inset-0 z-40 bg-navy/50; }
+  .sheet { @apply fixed inset-x-0 bottom-0 z-50 mx-auto max-h-[90svh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-cream p-5 pb-8 shadow-2xl; animation: up .25s ease; }
+  .nav { @apply sticky bottom-0 z-30 grid grid-cols-4 border-t border-navy/10 bg-white/95 backdrop-blur; padding-bottom: env(safe-area-inset-bottom); }
+  .nav-item { @apply flex min-h-[60px] flex-col items-center justify-center gap-0.5 text-[11px] text-navy/55; }
+  .nav-item.on { color: var(--accent); }
+  .nav-item svg { @apply h-6 w-6; }
+  .fade { animation: fade .3s ease; }
+
+  /* תיבת סימון עגולה: ריקה, ובלחיצה מתמלאת בצבע ההדגשה */
+  .check { @apply flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition; border-color: rgba(20,33,61,.25); }
+  .check.on { background: var(--accent); border-color: var(--accent); color: #fff; animation: pop .25s ease; }
+  .check svg { @apply h-4 w-4; }
+
+  /* נקודות ההתמדה בשבוע */
+  .dot { @apply mx-auto block h-5 w-5 rounded-full border-2 transition; border-color: rgba(20,33,61,.18); }
+  .dot.on { background: var(--accent); border-color: var(--accent); }
+  .dot.off { @apply border-transparent bg-navy/5; }
+  .dot.today { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--accent); }
+
+  .bar { @apply h-2 w-full overflow-hidden rounded-full bg-navy/10; }
+  .bar > span { @apply block h-full rounded-full transition-all duration-500; background: var(--accent); }
+}
+@keyframes up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes pop { 0% { transform: scale(.8); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .sheet, .fade, .check.on { animation: none; } .bar > span { transition: none; } }

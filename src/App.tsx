@@ -3,6 +3,7 @@ import { Section, Heading } from "./components/Section";
 import { FloatingWhatsApp, PhoneCta, WhatsAppCta, WhatsAppIcon } from "./components/WhatsApp";
 import { Reveal } from "./components/Reveal";
 import { Mockup } from "./components/Mockup";
+import { JournalMockup } from "./components/JournalMockup";
 import { TopBar } from "./components/TopBar";
 import { track } from "./analytics";
 import { Faq } from "./components/Faq";
@@ -16,6 +17,9 @@ import {
   differentiator,
   facts,
   heroConcrete,
+  journal,
+  JOURNAL_DEMO_URL,
+  JOURNAL_WHATSAPP_URL,
   PHONE_DISPLAY,
   PHONE_TEL,
   promise,
@@ -47,6 +51,7 @@ export default function App() {
         <Services />
         <Process />
         <DayAfter />
+        <Journal />
         <Story />
         <Testimonials />
         <FaqSection />
@@ -225,6 +230,15 @@ function Services() {
             <div className={`mt-6 border-t pt-4 ${s.highlight ? "border-gold/40" : "border-gold-deep/30"}`}>
               <p className={`font-title text-2xl font-medium ${s.highlight ? "text-gold" : "text-gold-deep"}`}>{s.price}</p>
               {s.note && <p className={`mt-1 text-sm ${s.highlight ? "text-cream/70" : "text-navy/60"}`}>{s.note}</p>}
+              {s.journal && (
+                <a
+                  href="#journal"
+                  className="mt-2 inline-block text-sm font-medium text-gold-deep underline-offset-4 hover:underline"
+                  onClick={() => track("journal_section_click", { location: "services" })}
+                >
+                  מה זה, ולמי ←
+                </a>
+              )}
               {s.title === "מערכת ניהול לבית כנסת" && (
                 <a
                   href={DEMO_URL}
@@ -323,6 +337,92 @@ function DayAfter() {
           </a>
         </Reveal>
       </div>
+    </Section>
+  );
+}
+
+/* 5ג. היומן האישי הממותג: הפרויקט הקטן ביותר, לאדם אחד. עם הדמיה וקישור להדגמה חיה. */
+function Journal() {
+  return (
+    <Section tone="navy" id="journal" labelledBy="journal-title">
+      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_auto]">
+        <Reveal>
+          <Heading id="journal-title" eyebrow={journal.eyebrow} title={journal.title} tone="navy" align="start" />
+          <p className="max-w-2xl text-lg leading-relaxed text-cream/85 sm:text-xl">{journal.lead}</p>
+          <p className="mt-5 max-w-2xl border-r-2 border-gold/60 pr-4 text-base leading-relaxed text-cream/70">{journal.personal}</p>
+
+          <div className="mt-8 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <p className="font-title text-4xl font-medium text-gold">{journal.price}</p>
+            <p className="text-sm text-cream/60">{journal.priceNote}</p>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a
+              href={JOURNAL_DEMO_URL}
+              className="btn-whatsapp-gold w-full sm:w-auto"
+              onClick={() => track("journal_demo_click", { location: "journal" })}
+            >
+              {journal.demoCta}
+            </a>
+            <a
+              href={JOURNAL_WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-phone-cream w-full sm:w-auto"
+              onClick={() => track("whatsapp_click", { location: "journal", label: journal.cta })}
+            >
+              <WhatsAppIcon />
+              <span>{journal.cta}</span>
+            </a>
+          </div>
+          <p className="mt-3 text-sm text-cream/60">{journal.demoHint}</p>
+        </Reveal>
+
+        <Reveal delay={200} className="mx-auto">
+          <a href={JOURNAL_DEMO_URL} aria-label="לפתוח את הדגמת היומן" onClick={() => track("journal_demo_click", { location: "journal-mockup" })}>
+            <JournalMockup />
+          </a>
+        </Reveal>
+      </div>
+
+      <div className="mx-auto mt-16 grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.4fr]">
+        <Reveal>
+          <h3 className="font-title text-2xl font-medium text-gold">{journal.who.title}</h3>
+          <ul className="mt-5 space-y-5">
+            {journal.who.items.map((w) => (
+              <li key={w.title} className="border-r border-gold/40 pr-4">
+                <p className="font-title text-xl font-medium">{w.title}</p>
+                <p className="mt-1 leading-relaxed text-cream/75">{w.text}</p>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+        <Reveal delay={120}>
+          <h3 className="font-title text-2xl font-medium text-gold">{journal.inside.title}</h3>
+          <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+            {journal.inside.items.map((it) => (
+              <li key={it.title} className="rounded-2xl border border-cream/15 bg-cream/5 p-5">
+                <p className="font-title text-lg font-medium">{it.title}</p>
+                <p className="mt-1 text-sm leading-relaxed text-cream/75">{it.text}</p>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+
+      <Reveal className="mx-auto mt-12 max-w-6xl">
+        <ol className="grid gap-4 sm:grid-cols-2">
+          {journal.tiers.map((t) => (
+            <li key={t.price} className="flex gap-4 rounded-2xl border border-gold/40 p-6">
+              <p className="shrink-0 font-title text-2xl font-medium text-gold">{t.price}</p>
+              <div>
+                <p className="font-title text-xl font-medium">{t.title}</p>
+                <p className="mt-1 leading-relaxed text-cream/75">{t.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
     </Section>
   );
 }

@@ -13,7 +13,7 @@ export const brand = {
 } as const;
 
 export default {
-  content: ["./index.html", "./src/**/*.{ts,tsx}"],
+  content: ["./index.html", "./journal/index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -23,6 +23,9 @@ export default {
           deep: brand.goldDeep,
         },
         cream: brand.cream,
+        // רק להדגמת היומן (/journal/): סטטוסים
+        ok: "#3F7D4E",
+        warn: "#B4532A",
       },
       fontFamily: {
         title: ['"Frank Ruhl Libre"', "serif"],

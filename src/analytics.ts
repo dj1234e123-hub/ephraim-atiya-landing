@@ -37,7 +37,7 @@ function shouldRun(): boolean {
 }
 
 /** מאתחל את כל כלי המדידה. לקרוא פעם אחת בכל עמוד. */
-export function initAnalytics(page: "landing" | "terms" | "accessibility") {
+export function initAnalytics(page: "landing" | "terms" | "accessibility" | "journal") {
   if (!shouldRun() || enabled) return;
   enabled = true;
 
@@ -54,7 +54,7 @@ export function initAnalytics(page: "landing" | "terms" | "accessibility") {
     capture_exceptions: true,
     capture_performance: true,
     cross_subdomain_cookie: true, // אותו מבקר בדף הנחיתה ובהדגמה
-    session_recording: { maskAllInputs: true },
+    session_recording: { maskAllInputs: page !== "journal" }, // בהדגמת היומן הנתונים בדיוניים
   });
   posthog.register({ site: "landing", page });
 
