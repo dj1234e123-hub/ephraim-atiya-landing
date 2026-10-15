@@ -10,6 +10,7 @@ import {
   audience,
   brand,
   contact,
+  dayAfter,
   differentiator,
   facts,
   heroConcrete,
@@ -43,6 +44,7 @@ export default function App() {
         <Differentiator />
         <Services />
         <Process />
+        <DayAfter />
         <Story />
         <Testimonials />
         <FaqSection />
@@ -255,6 +257,51 @@ function Process() {
   );
 }
 
+/* 5ב. מה מקבלים, ומה קורה ביום שאחרי */
+function DayAfter() {
+  return (
+    <Section tone="cream" id="day-after" labelledBy="day-after-title">
+      <Reveal>
+        <Heading id="day-after-title" eyebrow="בלי הפתעות" title={dayAfter.title} tone="cream" />
+      </Reveal>
+
+      <div className="mx-auto max-w-5xl">
+        <h3 className="mb-5 text-center font-title text-2xl font-medium text-navy">מה קונים ממני</h3>
+        <ul className="grid gap-5 sm:grid-cols-3">
+          {dayAfter.get.map((g, i) => (
+            <Reveal as="li" key={g.title} delay={i * 100} className="card-lift rounded-2xl bg-white/60 p-6 shadow-card ring-1 ring-navy/5">
+              <p className="font-title text-xl font-medium text-navy">{g.title}</p>
+              <p className="mt-2 leading-relaxed text-navy/75">{g.text}</p>
+            </Reveal>
+          ))}
+        </ul>
+
+        <h3 className="mb-5 mt-14 text-center font-title text-2xl font-medium text-navy">ביום שאחרי</h3>
+        <ol className="grid gap-4 sm:grid-cols-2">
+          {dayAfter.after.map((a, i) => (
+            <Reveal as="li" key={a.title} delay={i * 100} className="flex gap-4 rounded-2xl border border-navy/10 p-6">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold-deep font-title text-lg text-gold-deep">
+                {i + 1}
+              </span>
+              <div>
+                <p className="font-title text-xl font-medium text-navy">{a.title}</p>
+                <p className="mt-1 leading-relaxed text-navy/75">{a.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </ol>
+
+        <Reveal className="mt-10 text-center">
+          <p className="mx-auto max-w-2xl leading-relaxed text-navy/70">{dayAfter.hosting}</p>
+          <a href="/terms/" className="mt-4 inline-block border-b border-gold-deep font-medium text-gold-deep hover:text-navy">
+            {dayAfter.termsLabel}
+          </a>
+        </Reveal>
+      </div>
+    </Section>
+  );
+}
+
 /* 6. הסיפור שלי */
 function Story() {
   return (
@@ -394,6 +441,12 @@ function Closing() {
             ·
           </span>
           <span className="text-gold">{brand.slogan}</span>
+          <span className="mx-2" aria-hidden="true">
+            ·
+          </span>
+          <a href="/terms/" className="hover:text-gold">
+            תנאי מסירה
+          </a>
         </p>
       </div>
     </footer>
