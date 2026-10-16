@@ -26,10 +26,32 @@ export const gates: Gate[] = [
 
 const KEY = "audience_v1";
 const listeners = new Set<() => void>();
-let current: Audience | null = load();
 
 function isAudience(x: unknown): x is Audience {
   return typeof x === "string" && gates.some((g) => g.id === x);
+}
+
+/**
+ * קישור ישיר לקהל: ephraim-atiya.com/?for=shul (או mosad, business, journal).
+ * הדף נפתח כשהשער כבר נבחר: הטלפון הנכון, הכרטיס המודגש, והוואטסאפ עם ההודעה הנכונה.
+ * עם עוגן (?for=shul#gabbai) הדפדפן גם גולל לבלוק. הבחירה מהקישור גוברת על מה שנשמר.
+ */
+export function audienceFromUrl(search: string = typeof location === "undefined" ? "" : location.search): Audience | null {
+  try {
+    const v = new URLSearchParams(search).get("for");
+    return isAudience(v) ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+let current: Audience | null = audienceFromUrl() ?? load();
+if (current && current !== load()) {
+  try {
+    localStorage.setItem(KEY, current);
+  } catch {
+    /* best effort */
+  }
 }
 
 function load(): Audience | null {

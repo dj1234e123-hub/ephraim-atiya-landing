@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Mark, Wordmark } from "./components/Logo";
 import { Section, Heading } from "./components/Section";
 import { FloatingWhatsApp, PhoneCta, WhatsAppCta, WhatsAppIcon } from "./components/WhatsApp";
@@ -33,10 +33,18 @@ import {
   servicesStrip,
   story,
   testimonials,
+  type Testimonial,
   WHATSAPP_URL,
 } from "./content";
 
 export default function App() {
+  // קישור עם עוגן (למשל ?for=shul#gabbai): הדפדפן מנסה לגלול לפני ש-React צייר את הדף, אז גוללים שוב אחרי הציור.
+  useEffect(() => {
+    const id = location.hash.slice(1);
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ block: "start" });
+  }, []);
   return (
     <>
       <a
@@ -59,7 +67,6 @@ export default function App() {
         <DayAfter />
         <Journal />
         <Story />
-        <Testimonials />
         <FaqSection />
         <Closing />
       </main>
@@ -92,7 +99,19 @@ function Hero() {
               <WhatsAppCta className="w-full sm:w-auto" location="hero" />
               <PhoneCta className="w-full sm:w-auto" location="hero" />
             </div>
-            <p className="mt-4 text-sm text-cream/60">{contact.area}</p>
+            <div className="mt-5 flex items-center gap-3">
+              <img
+                src="/ephraim.jpg"
+                width={560}
+                height={560}
+                alt=""
+                className="h-12 w-12 rounded-full object-cover ring-2 ring-gold/70"
+              />
+              <p className="text-sm leading-snug text-cream/60">
+                <span className="block text-base text-cream">{brand.name}</span>
+                {contact.area}
+              </p>
+            </div>
           </div>
 
           <Reveal className="hidden lg:block" delay={300}>
@@ -287,7 +306,22 @@ function GabbaiWeek() {
           <WhatsAppCta variant="outline" className="w-full sm:w-auto" label="לשיחה על בית הכנסת שלכם" location="gabbai-week" audience="shul" />
         </div>
       </Reveal>
+
+      <Reveal className="mx-auto mt-12 max-w-2xl">
+        <Quote t={testimonials.gabbai} tone="navy" />
+      </Reveal>
     </Section>
+  );
+}
+
+/** ציטוט של לקוח, ליד נקודת ההחלטה שהוא מחזק. */
+function Quote({ t, tone }: { t: Testimonial; tone: "navy" | "cream" }) {
+  const navy = tone === "navy";
+  return (
+    <figure className={`rounded-2xl border p-6 text-start ${navy ? "border-gold/40 bg-cream/5" : "border-gold-deep/30 bg-white/60 shadow-card"}`}>
+      <blockquote className={`text-lg leading-relaxed ${navy ? "text-cream/90" : "text-navy/85"}`}>{t.quote}</blockquote>
+      <figcaption className={`mt-3 text-sm font-medium ${navy ? "text-gold" : "text-gold-deep"}`}>{t.who}</figcaption>
+    </figure>
   );
 }
 
@@ -434,6 +468,11 @@ function Demos() {
                   </li>
                 ))}
               </ul>
+              {d.id === "business" && (
+                <div className="mt-6 w-full">
+                  <Quote t={testimonials.business} tone="navy" />
+                </div>
+              )}
               <a
                 href={d.url}
                 className="mt-6 inline-flex min-h-[48px] items-center justify-center rounded-full bg-gold px-6 font-medium text-navy transition hover:bg-cream"
@@ -482,6 +521,10 @@ function DayAfter() {
             </Reveal>
           ))}
         </ol>
+
+        <Reveal className="mx-auto mt-10 max-w-2xl">
+          <Quote t={testimonials.after} tone="cream" />
+        </Reveal>
 
         <Reveal className="mt-10 text-center">
           <p className="mx-auto max-w-2xl leading-relaxed text-navy/70">{dayAfter.hosting}</p>
@@ -637,36 +680,6 @@ function Story() {
           <p className="mt-8 font-title text-2xl text-gold-deep">{brand.slogan}</p>
         </Reveal>
       </div>
-    </Section>
-  );
-}
-
-/* 7. המלצות */
-function Testimonials() {
-  return (
-    <Section tone="navy" id="testimonials" labelledBy="testimonials-title" arches={false}>
-      <Reveal>
-        <Heading id="testimonials-title" eyebrow="מה אומרים" title="המלצות" tone="navy" />
-      </Reveal>
-      <ul className="grid gap-5 sm:grid-cols-3">
-        {testimonials.map((t, i) => (
-          <Reveal as="li" key={t.quote} delay={i * 100} className="flex flex-col justify-between rounded-2xl border border-cream/15 bg-cream/5 p-7">
-            <blockquote className="text-lg leading-relaxed text-cream/90">{t.quote}</blockquote>
-            <footer className="mt-6 flex items-center justify-between gap-3 border-t border-gold/40 pt-4 text-sm text-gold">
-              <span>{t.who}</span>
-              {t.demoUrl && (
-                <a
-                  href={t.demoUrl}
-                  className="border-b border-gold/60 text-cream/80 hover:text-gold"
-                  onClick={() => track("demo_click", { location: "testimonials", demo: t.demoUrl === DEMO_URL ? "shul" : "business" })}
-                >
-                  {t.demoLabel}
-                </a>
-              )}
-            </footer>
-          </Reveal>
-        ))}
-      </ul>
     </Section>
   );
 }

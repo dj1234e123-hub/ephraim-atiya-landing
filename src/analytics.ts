@@ -8,9 +8,7 @@
  * רץ רק בבנייה לפרודקשן ועל הדומיין האמיתי, כדי שפיתוח ובדיקות לא ילכלכו את הנתונים.
  * הגדרות ההקלטה (אילו דומיינים, כמה זמן נשמר) נמצאות בפרויקט ב-PostHog, לא כאן.
  */
-import posthog from "posthog-js";
-import { inject } from "@vercel/analytics";
-import { injectSpeedInsights } from "@vercel/speed-insights";
+import type { PostHog } from "posthog-js";
 
 export const POSTHOG_TOKEN = "phc_Ao9zMFiwEvJyA7G3LchesR4N7mmJdfggEkrMZF86Z3Lb";
 export const POSTHOG_HOST = "https://us.i.posthog.com";
@@ -18,6 +16,9 @@ export const POSTHOG_HOST = "https://us.i.posthog.com";
 type Props = Record<string, string | number | boolean | null | undefined>;
 
 let enabled = false;
+/** פוסטהוג נטען רק אחרי שהדף על המסך (קובץ גדול). עד אז האירועים נשמרים בתור ונשלחים כשהוא מוכן. */
+let posthog: PostHog | null = null;
+const queue: Array<{ event: string; props?: Props }> = [];
 
 function isForced(): boolean {
   try {
@@ -36,10 +37,25 @@ function shouldRun(): boolean {
   return isForced();
 }
 
-/** מאתחל את כל כלי המדידה. לקרוא פעם אחת בכל עמוד. */
+/**
+ * מאתחל את כל כלי המדידה. לקוראים פעם אחת בכל עמוד.
+ * הטעינה עצמה נדחית עד שהדפדפן פנוי (או עד שתי שניות), כדי שהכפתורים יגיבו קודם גם בטלפון איטי.
+ */
 export function initAnalytics(page: "landing" | "terms" | "accessibility" | "journal") {
   if (!shouldRun() || enabled) return;
   enabled = true;
+  const start = () => void load(page);
+  if (typeof window.requestIdleCallback === "function") window.requestIdleCallback(start, { timeout: 2000 });
+  else window.setTimeout(start, 1200);
+}
+
+async function load(page: "landing" | "terms" | "accessibility" | "journal") {
+  const [{ default: ph }, { inject }, { injectSpeedInsights }] = await Promise.all([
+    import("posthog-js"),
+    import("@vercel/analytics"),
+    import("@vercel/speed-insights"),
+  ]);
+  posthog = ph;
 
   posthog.init(POSTHOG_TOKEN, {
     api_host: POSTHOG_HOST,
@@ -57,6 +73,7 @@ export function initAnalytics(page: "landing" | "terms" | "accessibility" | "jou
     session_recording: { maskAllInputs: page !== "journal" }, // בהדגמת היומן הנתונים בדיוניים
   });
   posthog.register({ site: "landing", page });
+  for (const q of queue.splice(0)) posthog.capture(q.event, q.props);
 
   inject();
   injectSpeedInsights();
@@ -67,10 +84,11 @@ export function initAnalytics(page: "landing" | "terms" | "accessibility" | "jou
   }
 }
 
-/** אירוע מותאם. בטוח לקרוא גם כשהמדידה כבויה. */
+/** אירוע מותאם. בטוח לקרוא גם כשהמדידה כבויה. לפני שפוסטהוג נטען, האירוע נשמר בתור. */
 export function track(event: string, props?: Props) {
   if (!enabled) return;
-  posthog.capture(event, props);
+  if (posthog) posthog.capture(event, props);
+  else queue.push({ event, props });
 }
 
 /** איזה סקשנים המבקר באמת ראה (פעם אחת לכל סקשן). מחכה עד ש-React צייר את הדף. */

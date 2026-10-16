@@ -106,28 +106,25 @@ export const story = {
  * המלצות מלקוחות. הגבאי אישר את הנוסח ואת שמו. בעל העסק (ההדגמה) אישר את הנוסח בלי שם.
  * לפני פרסום שם או שם עסק ליד ציטוט, לקבל אישור מהלקוח.
  */
-export type Testimonial = { quote: string; who: string; demoUrl?: string; demoLabel?: string };
-export const testimonials: Testimonial[] = [
-  {
+export type Testimonial = { quote: string; who: string };
+/** כל ציטוט יושב ליד נקודת ההחלטה שלו: הגבאי אחרי "שבת מוכנה מראש", בעל העסק בכרטיס ההדגמה, והשלישי ב"יום שאחרי". */
+export const testimonials: Record<"gabbai" | "business" | "after", Testimonial> = {
+  gabbai: {
     quote:
       "אפרים לא עשה את זה מרחוק. הוא ישב איתנו בבית הכנסת, פנים מול פנים, עד שהכול עבד. היום הנדרים, העליות והתרומות במקום אחד, ואני פנוי לתפילה.",
     who: "יוסף חיים חבה, גבאי בית כנסת",
-    demoUrl: DEMO_URL,
-    demoLabel: "לראות את המערכת",
   },
-  {
+  business: {
     quote:
       "חיפשתי מישהו שיבין איך אני עובד, לא שימכור לי תוכנה. אפרים ישב איתי, ירד לכל פרט, ובנה לי בדיוק את זה. לקוחות, הצעות מחיר ותשלומים, הכול מהטלפון.",
-    who: "בעל עסק",
-    demoUrl: BUSINESS_DEMO_URL,
-    demoLabel: "לראות את המערכת",
+    who: "בעל העסק שהמערכת נבנתה לו",
   },
-  {
+  after: {
     quote:
       "הכי חשוב לי היה שלא יימסר ויעלם. אפרים ליווה אותנו עד שעבדנו עם המערכת לבד, וכשצריך משהו, הוא זמין. פשוט עובד.",
     who: "בעל עסק",
   },
-];
+};
 
 export const contact = {
   area: "גוש עציון · שירות בכל הארץ",
