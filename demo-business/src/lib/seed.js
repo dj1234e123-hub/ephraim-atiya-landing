@@ -28,16 +28,16 @@ const id = (p) => `${p}-${++seq}`
 export function buildSeed() {
   seq = 0
   const T = today()
-  const ws = { id: 'ws-demo', name: 'אלישע ודוד', business_name: 'אלישע אינסטלציה', vat_percent: 18, is_demo: true, created_at: made(-120) }
+  const ws = { id: 'ws-demo', name: 'שמעון ומאיר', business_name: 'שמעון אינסטלציה', vat_percent: 18, is_demo: true, created_at: made(-120) }
 
   const profiles = [
-    { id: ME_ID, workspace_id: ws.id, full_name: 'אלישע', phone: '050-000-0001', can_be_assigned: true, assignments_seen_at: at(-2, '21:00'), created_at: made(-120) },
-    { id: PARTNER_ID, workspace_id: ws.id, full_name: 'דוד', phone: '050-000-0002', can_be_assigned: true, assignments_seen_at: at(-1, '21:00'), created_at: made(-120) },
+    { id: ME_ID, workspace_id: ws.id, full_name: 'שמעון', phone: '050-000-0001', can_be_assigned: true, assignments_seen_at: at(-2, '21:00'), created_at: made(-120) },
+    { id: PARTNER_ID, workspace_id: ws.id, full_name: 'מאיר', phone: '050-000-0002', can_be_assigned: true, assignments_seen_at: at(-1, '21:00'), created_at: made(-120) },
   ]
 
   const dests = [
-    { id: 'd-1', workspace_id: ws.id, label: 'אלישע - מזרחי', account_name: 'אלישע אינסטלציה', bank_name: 'בנק מזרחי', bank_branch: '461', bank_account: '000000', bit_phone: '050-000-0001', adds_vat: false, note: null, sort_order: 1, created_at: made(-120) },
-    { id: 'd-2', workspace_id: ws.id, label: 'דוד - פועלים (עם חשבונית)', account_name: 'דוד', bank_name: 'בנק הפועלים', bank_branch: '782', bank_account: '000000', bit_phone: null, adds_vat: true, note: 'חשבונית מס תישלח אחרי התשלום', sort_order: 2, created_at: made(-120) },
+    { id: 'd-1', workspace_id: ws.id, label: 'שמעון - מזרחי', account_name: 'שמעון אינסטלציה', bank_name: 'בנק מזרחי', bank_branch: '461', bank_account: '000000', bit_phone: '050-000-0001', adds_vat: false, note: null, sort_order: 1, created_at: made(-120) },
+    { id: 'd-2', workspace_id: ws.id, label: 'מאיר - פועלים (עם חשבונית)', account_name: 'מאיר', bank_name: 'בנק הפועלים', bank_branch: '782', bank_account: '000000', bit_phone: null, adds_vat: true, note: 'חשבונית מס תישלח אחרי התשלום', sort_order: 2, created_at: made(-120) },
   ]
 
   const cust = (cid, name, phone, address, extra = {}) => ({
@@ -194,7 +194,7 @@ export function buildSeed() {
     photo({ job_id: 'j-8', phase: 'after', path: 'seed/j8-after-1', label: 'אחרי · גוף חימום חדש', tone: 'new', created_at: at(-6, '11:40') }),
   ]
 
-  // הצעות מחיר. התוספת של ההדגמה: במערכת של אלישע עדיין אין מודול כזה.
+  // הצעות מחיר. התוספת של ההדגמה: במערכת האמיתית עדיין אין מודול כזה.
   const item = (desc, qty, unit_price) => ({ id: id('qi'), desc, qty, unit_price })
   const quote = (o) => ({
     id: '', workspace_id: ws.id, customer_id: null, title: '', items: [], adds_vat: false, discount: 0, valid_days: 14, notes: null,

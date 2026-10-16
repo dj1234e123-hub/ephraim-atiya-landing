@@ -45,8 +45,8 @@ export function BusinessMockup() {
             <div className="mockup-stat"><b>₪2,950</b><span>לגבייה</span></div>
           </div>
           <ul className="mockup-list">
-            <li><i className="dot on" />08:00 סתימה במטבח · אלישע<span>נקבעה</span></li>
-            <li><i className="dot on" />10:00 נזילה מתחת לכיור · דוד<span>דחוף</span></li>
+            <li><i className="dot on" />08:00 סתימה במטבח · שמעון<span>נקבעה</span></li>
+            <li><i className="dot on" />10:00 נזילה מתחת לכיור · מאיר<span>דחוף</span></li>
             <li><i className="dot" />הצעת מחיר: שיפוץ חדר רחצה<span>₪12,862</span></li>
             <li><i className="dot" />תיקון נזילה · ממתין לתשלום<span>₪600</span></li>
           </ul>

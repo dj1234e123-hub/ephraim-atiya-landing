@@ -29,7 +29,7 @@ export default function DemoTry() {
     <Card className="mt-4 border-2 border-[#C9A24A]/60 bg-[#F6F1E7]">
       <div className="flex items-start justify-between gap-2">
         <div>
-          <div className="font-extrabold text-lg text-[#14213D]">זאת המערכת שאלישע עובד איתה כל יום.</div>
+          <div className="font-extrabold text-lg text-[#14213D]">זאת מערכת שעובדת אצל עסק אינסטלציה אמיתי כל יום.</div>
           <p className="text-sm text-slate-600 mt-0.5">הנתונים בדיוניים, אפשר ללחוץ על הכול. כמה דברים שכדאי לנסות:</p>
         </div>
         <button type="button" onClick={dismiss} aria-label="סגירה" className="min-h-9 min-w-9 rounded-full bg-white/70 text-slate-500">✕</button>

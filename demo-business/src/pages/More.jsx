@@ -36,7 +36,7 @@ export default function More() {
       <Card className="mt-8 bg-[#14213D] text-[#F6F1E7] border-0">
         <div className="font-extrabold text-lg">המערכת הזאת נבנתה לעסק אינסטלציה של שני שותפים.</div>
         <p className="text-sm opacity-80 mt-1 leading-relaxed">
-          לא תוכנה מהמדף: כל מסך כאן נולד משאלה של אלישע בשטח. מערכת לעסק שלכם נבנית אותו דבר,
+          לא תוכנה מהמדף: כל מסך כאן נולד משאלה של בעל העסק בשטח. מערכת לעסק שלכם נבנית אותו דבר,
           לפי איך שאתם עובדים. במערכת האמיתית יש גם התחברות עם סיסמה לכל שותף.
         </p>
         <a href={EPHRAIM_WA} target="_blank" rel="noopener noreferrer" onClick={() => track('demo_cta_click', { location: 'more' })}

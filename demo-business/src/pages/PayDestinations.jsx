@@ -43,7 +43,7 @@ export default function PayDestinations() {
 
   async function save() {
     if (busy) return
-    if (!editing.label.trim()) return setError({ message: 'צריך שם ליעד, למשל "אלישע - מזרחי"' })
+    if (!editing.label.trim()) return setError({ message: 'צריך שם ליעד, למשל "שמעון - מזרחי"' })
     setBusy(true); setError(null)
     try {
       const { id, label, account_name, bank_name, bank_branch, bank_account, bit_phone, adds_vat, note } = editing
@@ -75,11 +75,11 @@ export default function PayDestinations() {
       <div>
         <PageTitle back="/pay-destinations">{editing.id ? 'עריכת יעד תשלום' : 'יעד תשלום חדש'}</PageTitle>
         <div className="space-y-4">
-          <Field label="שם היעד" hint="מה שאתם רואים כשבוחרים, למשל: אלישע - מזרחי">
+          <Field label="שם היעד" hint="מה שאתם רואים כשבוחרים, למשל: שמעון - מזרחי">
             <Input value={editing.label} onChange={set('label')} autoFocus />
           </Field>
           <Field label="שם בעל החשבון" hint="מה שהלקוח רואה בהודעה">
-            <Input value={editing.account_name || ''} onChange={set('account_name')} placeholder="אלישע אינסטלציה" />
+            <Input value={editing.account_name || ''} onChange={set('account_name')} placeholder="שמעון אינסטלציה" />
           </Field>
           <Field label="בנק"><Input value={editing.bank_name || ''} onChange={set('bank_name')} placeholder="בנק מזרחי" /></Field>
           <div className="grid grid-cols-2 gap-3">

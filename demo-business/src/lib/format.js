@@ -223,7 +223,7 @@ export function visitWho(visit, profiles = []) {
   return `${all.length > 1 ? '🤝' : '👤'} ${all.join(' + ')}`
 }
 
-/** '👤 אלישע', '🤝 אלישע + דוד', or 'לא שויך'. */
+/** '👤 שמעון', '🤝 שמעון + מאיר', or 'לא שויך'. */
 export function assigneeText(job) {
   const names = Array.isArray(job?.assignee_names) ? job.assignee_names.filter(Boolean) : []
   if (!names.length) return 'לא שויך'

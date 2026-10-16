@@ -29,7 +29,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import { Loading } from './components/ui'
 
 /**
- * גרסת ההדגמה: אין מסך התחברות. המשתמש המחובר הוא תמיד אלישע, והנתונים
+ * גרסת ההדגמה: אין מסך התחברות. המשתמש המחובר הוא תמיד שמעון (שם בדיוני), והנתונים
  * נטענים מהזיכרון. שאר המסכים זהים למערכת האמיתית.
  */
 export default function App() {
