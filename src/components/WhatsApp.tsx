@@ -1,5 +1,7 @@
-import { CTA_LABEL, PHONE_CTA_LABEL, PHONE_DISPLAY, PHONE_TEL, WHATSAPP_URL } from "../content";
+import { CTA_LABEL, PHONE_CTA_LABEL, PHONE_DISPLAY, PHONE_TEL } from "../content";
 import { track } from "../analytics";
+import { useEffect, useState } from "react";
+import { useAudience, whatsappHref, type Audience } from "../audience";
 
 export function WhatsAppIcon({ className = "h-6 w-6" }: { className?: string }) {
   return (
@@ -9,18 +11,21 @@ export function WhatsAppIcon({ className = "h-6 w-6" }: { className?: string }) 
   );
 }
 
-type CtaProps = { variant?: "gold" | "navy"; className?: string; label?: string; location: string };
+/** outline: מתאר שמנת על כחול, לצד כפתור מלא אחר. */
+type CtaProps = { variant?: "gold" | "navy" | "outline"; className?: string; label?: string; location: string; audience?: Audience };
 
-/** כפתור הוואטסאפ הראשי. קישור אמיתי לשיחה, נפתח בחלון חדש. */
-export function WhatsAppCta({ variant = "gold", className = "", label = CTA_LABEL, location }: CtaProps) {
-  const cls = variant === "gold" ? "btn-whatsapp-gold" : "btn-whatsapp-navy";
+/** כפתור הוואטסאפ הראשי. קישור אמיתי לשיחה, נפתח בחלון חדש, עם הודעה מוכנה לפי השער שנבחר בכותרת. */
+export function WhatsAppCta({ variant = "gold", className = "", label = CTA_LABEL, location, audience: fixed }: CtaProps) {
+  const cls = variant === "gold" ? "btn-whatsapp-gold" : variant === "navy" ? "btn-whatsapp-navy" : "btn-phone-cream";
+  const picked = useAudience();
+  const audience = fixed ?? picked;
   return (
     <a
-      href={WHATSAPP_URL}
+      href={whatsappHref(audience)}
       target="_blank"
       rel="noopener noreferrer"
       className={`${cls} ${className}`}
-      onClick={() => track("whatsapp_click", { location, label })}
+      onClick={() => track("whatsapp_click", { location, label, audience })}
     >
       <WhatsAppIcon />
       <span>{label}</span>
@@ -56,16 +61,26 @@ export function PhoneCta({ variant = "cream", className = "", location }: { vari
   );
 }
 
-/** כפתור צף בפינה, בטלפון בלבד. */
+/** כפתור צף בפינה, בטלפון בלבד. מופיע רק אחרי שגוללים מעבר לכותרת, כדי לא לכסות את כפתורי הכותרת. */
 export function FloatingWhatsApp() {
+  const audience = useAudience();
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShown(window.scrollY > window.innerHeight * 0.7);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   return (
     <a
-      href={WHATSAPP_URL}
+      href={whatsappHref(audience)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="לשיחה בוואטסאפ"
-      onClick={() => track("whatsapp_click", { location: "floating" })}
-      className="fixed bottom-5 left-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-gold text-navy shadow-card ring-4 ring-navy/60 transition-transform active:scale-95 md:hidden"
+      aria-hidden={!shown}
+      tabIndex={shown ? 0 : -1}
+      onClick={() => track("whatsapp_click", { location: "floating", audience })}
+      className={`fixed bottom-5 left-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-gold text-navy shadow-card ring-4 ring-navy/60 transition-[transform,opacity] duration-300 active:scale-95 md:hidden ${shown ? "opacity-100" : "pointer-events-none translate-y-24 opacity-0"}`}
     >
       <WhatsAppIcon className="h-8 w-8" />
     </a>

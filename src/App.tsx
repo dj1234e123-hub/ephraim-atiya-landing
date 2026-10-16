@@ -3,32 +3,34 @@ import { Mark, Wordmark } from "./components/Logo";
 import { Section, Heading } from "./components/Section";
 import { FloatingWhatsApp, PhoneCta, WhatsAppCta, WhatsAppIcon } from "./components/WhatsApp";
 import { Reveal } from "./components/Reveal";
-import { BusinessMockup, Mockup } from "./components/Mockup";
+import { BusinessMockup, Mockup, MosadMockup } from "./components/Mockup";
 import { JournalMockup } from "./components/JournalMockup";
 import { ACCENTS, cleanName, DEFAULT_BRAND, demoUrl, loadBrand, saveBrand, whatsappUrl, type AccentId, type Brand } from "./journal/brand";
 import { TopBar } from "./components/TopBar";
 import { track } from "./analytics";
 import { Faq } from "./components/Faq";
+import { gates, setAudience, useAudience, type Audience } from "./audience";
 import {
   afterContact,
-  audience,
   brand,
+  BUSINESS_DEMO_URL,
   contact,
   dayAfter,
   DEMO_URL,
   demos,
-  differentiator,
   facts,
   gabbaiWeek,
+  gatesPrompt,
   heroConcrete,
   journal,
   JOURNAL_DEMO_URL,
+  mosad,
   PHONE_DISPLAY,
   PHONE_TEL,
   promise,
   services,
   servicesNote,
-  steps,
+  servicesStrip,
   story,
   testimonials,
   WHATSAPP_URL,
@@ -51,10 +53,9 @@ export default function App() {
         <Facts />
         <Promise />
         <GabbaiWeek />
-        <Differentiator />
+        <Mosad />
         <Services />
         <Demos />
-        <Process />
         <DayAfter />
         <Journal />
         <Story />
@@ -68,41 +69,115 @@ export default function App() {
   );
 }
 
-/* 1. Hero: טקסט + הדמיית מסך */
+/* 1. Hero: טקסט, ארבעה שערים, והטלפון של הקהל שנבחר */
 function Hero() {
+  const audience = useAudience();
   return (
     <header className="relative overflow-hidden bg-navy text-cream">
       <HeroArch />
-      <div className="container-page relative flex min-h-[100svh] flex-col items-center justify-center pb-28 pt-16 sm:pb-20">
+      <div className="container-page relative flex min-h-[100svh] flex-col items-center justify-center pb-24 pt-14 sm:pb-20">
         <div className="grid w-full items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="hero-stagger flex flex-col items-center text-center lg:items-start lg:text-start">
             <div className="flex flex-col items-center lg:flex-row lg:items-end lg:gap-6">
-              <Mark className="h-24 w-auto sm:h-28" animate />
-              <Wordmark className="mt-5 lg:mt-0 lg:items-start" />
+              <Mark className="h-20 w-auto sm:h-28" animate />
+              <Wordmark className="mt-4 lg:mt-0 lg:items-start" />
             </div>
 
-            <h1 className="mt-10 font-title text-4xl font-medium leading-tight text-gold sm:text-6xl">{brand.slogan}</h1>
-            <p className="mt-5 max-w-xl font-title text-2xl leading-snug text-cream sm:text-3xl">{heroConcrete}</p>
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-cream/75 sm:text-lg">{brand.essence}</p>
+            <h1 className="mt-8 font-title text-4xl font-medium leading-tight text-gold sm:text-6xl">{brand.slogan}</h1>
+            <p className="mt-4 max-w-xl font-title text-2xl leading-snug text-cream sm:text-3xl">{heroConcrete}</p>
 
-            <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+            <Gates location="hero" />
+
+            <div className="mt-7 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
               <WhatsAppCta className="w-full sm:w-auto" location="hero" />
               <PhoneCta className="w-full sm:w-auto" location="hero" />
             </div>
             <p className="mt-4 text-sm text-cream/60">{contact.area}</p>
           </div>
 
-          <Reveal className="hidden lg:block" delay={400}>
-            <Mockup />
-            <p className="mt-4 text-center text-sm text-cream/60">
-              <a href={DEMO_URL} className="border-b border-gold/60 text-gold hover:text-cream" onClick={() => track("demo_click", { location: "hero" })}>
-                לפתוח את ההדגמה ולנסות בעצמכם
-              </a>
-            </p>
+          <Reveal className="hidden lg:block" delay={300}>
+            <AudienceMockup audience={audience} location="hero" />
           </Reveal>
         </div>
       </div>
     </header>
+  );
+}
+
+/**
+ * ארבעת השערים: מי המבקר. לחיצה גוללת לבלוק שלו, מחליפה את הטלפון המודמה,
+ * ומכניסה לכל כפתורי הוואטסאפ הודעה מוכנה שאומרת מי פונה.
+ */
+function Gates({ location }: { location: string }) {
+  const audience = useAudience();
+  return (
+    <nav aria-label="למי הדף" className="mt-8 w-full max-w-xl">
+      <p className="eyebrow mb-3 text-gold">{gatesPrompt}</p>
+      <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+        {gates.map((g) => {
+          const on = audience === g.id;
+          return (
+            <li key={g.id}>
+              <a
+                href={g.href}
+                className={`gate ${on ? "gate-on" : ""}`}
+                aria-current={on ? "true" : undefined}
+                onClick={() => {
+                  setAudience(g.id);
+                  track("audience_pick", { audience: g.id, location });
+                }}
+              >
+                <GateIcon id={g.id} />
+                <span className="font-title text-lg font-medium leading-tight">{g.title}</span>
+                <span className="text-xs text-cream/60">{g.sub}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
+
+function GateIcon({ id }: { id: Audience }) {
+  const d: Record<Audience, string> = {
+    shul: "M5 21V11a7 7 0 0 1 14 0v10M3 21h18M12 4V2",
+    mosad: "M12 6c-2-1.5-5-1.5-8-1v14c3-.5 6-.5 8 1 2-1.5 5-1.5 8-1V5c-3-.5-6-.5-8 1Zm0 0v14",
+    business: "M14 7V5a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2v2M4 7h16v12H4zM4 12h16",
+    journal: "M7 3v3M17 3v3M4 6h16v15H4zM4 10h16M8 14l2.5 2.5L15 12",
+  };
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d={d[id]} />
+    </svg>
+  );
+}
+
+/** הטלפון המודמה של הקהל שנבחר, עם הקישור להדגמה שלו. בלי בחירה: בית הכנסת. */
+function AudienceMockup({ audience, location }: { audience: Audience | null; location: string }) {
+  const a = audience ?? "shul";
+  const link: Record<Audience, { href: string; label: string }> = {
+    shul: { href: DEMO_URL, label: "לפתוח את ההדגמה ולנסות בעצמכם" },
+    business: { href: BUSINESS_DEMO_URL, label: "לפתוח את הדגמת העסק ולנסות בעצמכם" },
+    journal: { href: demoUrl(JOURNAL_DEMO_URL, loadBrand() ?? DEFAULT_BRAND), label: "לפתוח את הדגמת היומן" },
+    mosad: { href: "#mosad", label: "למוסד אין הדגמה כללית. מה כן יש: למטה" },
+  };
+  return (
+    <>
+      {a === "shul" && <Mockup />}
+      {a === "business" && <BusinessMockup />}
+      {a === "mosad" && <MosadMockup />}
+      {a === "journal" && <JournalMockup brand={loadBrand() ?? DEFAULT_BRAND} />}
+      <p className="mt-4 text-center text-sm text-cream/60">
+        <a
+          href={link[a].href}
+          className="border-b border-gold/60 text-gold hover:text-cream"
+          onClick={() => track("demo_click", { location, demo: a })}
+        >
+          {link[a].label}
+        </a>
+      </p>
+    </>
   );
 }
 
@@ -122,23 +197,15 @@ function HeroArch() {
   );
 }
 
-/* 1ב. רצועת עובדות: למה לסמוך, מיד אחרי הכותרת. במובייל גם ההדמיה כאן. */
+/* 1ב. רצועת עובדות: למה לסמוך, מיד אחרי הכותרת. במובייל גם הטלפון של הקהל כאן. */
 function Facts() {
+  const audience = useAudience();
   return (
     <section aria-label="עובדות" className="relative border-y border-gold/25 bg-navy text-cream">
       <div className="container-page py-10">
         <Reveal className="lg:hidden">
           <div className="mb-10">
-            <Mockup />
-            <p className="mt-5 text-center">
-              <a
-                href={DEMO_URL}
-                className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-gold/70 px-6 text-base font-medium text-gold hover:bg-gold/10"
-                onClick={() => track("demo_click", { location: "mobile-mockup" })}
-              >
-                לפתוח את ההדגמה ולנסות בעצמכם
-              </a>
-            </p>
+            <AudienceMockup audience={audience} location="mobile-mockup" />
           </div>
         </Reveal>
         <ul className="grid gap-6 sm:grid-cols-3">
@@ -160,18 +227,18 @@ function Promise() {
     <Section tone="cream" id="promise" labelledBy="promise-title">
       <Reveal>
         <Heading id="promise-title" eyebrow="למוסדות, קהילות ועסקים" title={promise.title} tone="cream" />
-        <p className="mx-auto mb-14 max-w-2xl text-center text-lg leading-relaxed text-navy/80">{audience}</p>
+        <p className="mx-auto mb-14 max-w-2xl text-center text-lg leading-relaxed text-navy/80">{brand.essence}</p>
       </Reveal>
 
-      <ul className="grid gap-5 sm:grid-cols-2">
+      <ul className="grid grid-cols-2 gap-3 sm:gap-5">
         {promise.pairs.map((pair, i) => (
-          <Reveal as="li" key={pair.promise} delay={i * 100} className="card-lift rounded-2xl bg-white/60 p-7 shadow-card ring-1 ring-navy/5">
-            <p className="text-base text-navy/60">{pair.problem}</p>
-            <div className="my-4 flex items-center gap-3" aria-hidden="true">
+          <Reveal as="li" key={pair.promise} delay={i * 100} className="card-lift rounded-2xl bg-white/60 p-4 shadow-card ring-1 ring-navy/5 sm:p-7">
+            <p className="text-sm text-navy/60 sm:text-base">{pair.problem}</p>
+            <div className="my-3 flex items-center gap-3 sm:my-4" aria-hidden="true">
               <span className="h-px flex-1 bg-gold-deep/40" />
               <ArrowLeft className="h-5 w-5 text-gold-deep" />
             </div>
-            <p className="font-title text-2xl font-medium text-navy">{pair.promise}</p>
+            <p className="font-title text-xl font-medium text-navy sm:text-2xl">{pair.promise}</p>
           </Reveal>
         ))}
       </ul>
@@ -187,7 +254,7 @@ function ArrowLeft({ className = "" }: { className?: string }) {
   );
 }
 
-/* 2ב. השבוע של גבאי: הכאב האחד וההבטחה */
+/* 2ב. השבוע של גבאי: הכאב האחד וההבטחה (השער "בית כנסת") */
 function GabbaiWeek() {
   return (
     <Section tone="navy" id="gabbai" labelledBy="gabbai-title">
@@ -209,92 +276,115 @@ function GabbaiWeek() {
       <Reveal className="mx-auto mt-14 max-w-2xl text-center">
         <p className="text-xl leading-relaxed text-cream/85 sm:text-2xl">{gabbaiWeek.pain}</p>
         <p className="mt-3 font-title text-4xl text-gold sm:text-5xl">{gabbaiWeek.promise}</p>
-        <a
-          href={DEMO_URL}
-          className="btn-phone-cream mt-8 inline-flex"
-          onClick={() => track("demo_click", { location: "gabbai-week" })}
-        >
-          {gabbaiWeek.demoLabel}
-        </a>
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a
+            href={DEMO_URL}
+            className="btn-whatsapp-gold w-full sm:w-auto"
+            onClick={() => track("demo_click", { location: "gabbai-week" })}
+          >
+            {gabbaiWeek.demoLabel}
+          </a>
+          <WhatsAppCta variant="outline" className="w-full sm:w-auto" label="לשיחה על בית הכנסת שלכם" location="gabbai-week" audience="shul" />
+        </div>
       </Reveal>
     </Section>
   );
 }
 
-/* 3. מה מבדל אותי */
-function Differentiator() {
+/* 2ג. למנהלי מוסדות (השער "מוסד"): בלי הדגמה כללית, אז קצר וישר */
+function Mosad() {
   return (
-    <Section tone="navy" id="why" labelledBy="why-title">
-      <Reveal className="mx-auto max-w-3xl text-center">
-        <Heading id="why-title" eyebrow="מה מבדל אותי" title={differentiator.title} tone="navy" />
-        {differentiator.lines.map((line) => (
-          <p key={line} className="text-xl leading-relaxed text-cream/85 sm:text-2xl">
-            {line}
-          </p>
-        ))}
-      </Reveal>
+    <Section tone="navy" id="mosad" labelledBy="mosad-title" arches={false} className="border-t border-gold/25">
+      <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:gap-16">
+        <Reveal>
+          <Heading id="mosad-title" eyebrow={mosad.eyebrow} title={mosad.title} tone="navy" align="start" />
+          <p className="text-lg leading-relaxed text-cream/85 sm:text-xl">{mosad.intro}</p>
+          <p className="mt-6 border-r-2 border-gold/60 pr-4 text-base leading-relaxed text-cream/70">{mosad.next}</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <WhatsAppCta className="w-full sm:w-auto" label={mosad.cta} location="mosad" audience="mosad" />
+            <PhoneCta className="w-full sm:w-auto" location="mosad" />
+          </div>
+        </Reveal>
 
-      <ul className="mx-auto mt-14 grid max-w-5xl gap-8 sm:grid-cols-3">
-        {differentiator.points.map((p, i) => (
-          <Reveal as="li" key={p.title} delay={i * 120} className="border-t border-gold/50 pt-5">
-            <h3 className="font-title text-2xl font-medium text-gold">{p.title}</h3>
-            <p className="mt-2 leading-relaxed text-cream/80">{p.text}</p>
-          </Reveal>
-        ))}
-      </ul>
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 lg:pt-14">
+          {mosad.points.map((p, i) => (
+            <Reveal as="li" key={p.title} delay={i * 100} className="flex gap-4 rounded-2xl border border-cream/15 bg-cream/5 p-5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/70 font-title text-lg text-gold">
+                {i + 1}
+              </span>
+              <div>
+                <p className="font-title text-xl font-medium text-gold">{p.title}</p>
+                <p className="mt-1 leading-relaxed text-cream/80">{p.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </ol>
+      </div>
     </Section>
   );
 }
 
-/* 4. שירותים ומחירים */
+/* 4. שירותים ומחירים: ארבעה כרטיסים, אחד לכל שער, ושורה אחת למה שמסביב */
 function Services() {
+  const audience = useAudience();
   return (
     <Section tone="cream" id="services" labelledBy="services-title">
       <Reveal>
         <Heading id="services-title" eyebrow="שירותים ומחירים" title="מה אני מציע, וכמה זה עולה" tone="cream" />
       </Reveal>
 
-      <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {services.map((s, i) => (
-          <Reveal
-            as="li"
-            key={s.title}
-            delay={i * 80}
-            className={`card-lift flex flex-col rounded-2xl p-7 shadow-card ring-1 ${
-              s.highlight ? "bg-navy text-cream ring-navy" : "bg-white/60 text-navy ring-navy/5"
-            }`}
-          >
-            <h3 className="font-title text-2xl font-medium">{s.title}</h3>
-            <p className={`mt-3 flex-1 leading-relaxed ${s.highlight ? "text-cream/80" : "text-navy/75"}`}>{s.desc}</p>
-            <div className={`mt-6 border-t pt-4 ${s.highlight ? "border-gold/40" : "border-gold-deep/30"}`}>
-              <p className={`font-title text-2xl font-medium ${s.highlight ? "text-gold" : "text-gold-deep"}`}>{s.price}</p>
-              {s.note && <p className={`mt-1 text-sm ${s.highlight ? "text-cream/70" : "text-navy/60"}`}>{s.note}</p>}
-              {s.journal && (
-                <a
-                  href="#journal"
-                  className="mt-2 inline-block text-sm font-medium text-gold-deep underline-offset-4 hover:underline"
-                  onClick={() => track("journal_section_click", { location: "services" })}
-                >
-                  מה זה, ולמי ←
-                </a>
-              )}
-              {s.demoUrl && (
-                <a
-                  href={s.demoUrl}
-                  className="mt-2 inline-block text-sm font-medium text-gold-deep underline-offset-4 hover:underline"
-                  onClick={() => track("demo_click", { location: "services", demo: s.demoUrl === DEMO_URL ? "shul" : "business" })}
-                >
-                  לראות הדגמה חיה ←
-                </a>
-              )}
-            </div>
-          </Reveal>
-        ))}
+      <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {services.map((s, i) => {
+          const on = audience === s.audience;
+          return (
+            <Reveal
+              as="li"
+              key={s.title}
+              delay={i * 80}
+              className={`card-lift flex flex-col rounded-2xl p-7 shadow-card ring-1 ${on ? "bg-navy text-cream ring-navy" : "bg-white/60 text-navy ring-navy/5"}`}
+            >
+              {on && <p className="eyebrow mb-2 text-gold">בחרתם למעלה</p>}
+              <h3 className="font-title text-2xl font-medium">{s.title}</h3>
+              <p className={`mt-3 flex-1 leading-relaxed ${on ? "text-cream/80" : "text-navy/75"}`}>{s.desc}</p>
+              <div className={`mt-6 border-t pt-4 ${on ? "border-gold/40" : "border-gold-deep/30"}`}>
+                <p className={`font-title text-2xl font-medium ${on ? "text-gold" : "text-gold-deep"}`}>{s.price}</p>
+                {s.note && <p className={`mt-1 text-sm ${on ? "text-cream/70" : "text-navy/60"}`}>{s.note}</p>}
+                {s.journal && (
+                  <a
+                    href="#journal"
+                    className={`mt-2 inline-block text-sm font-medium underline-offset-4 hover:underline ${on ? "text-gold" : "text-gold-deep"}`}
+                    onClick={() => track("journal_section_click", { location: "services" })}
+                  >
+                    מה זה, ולמי ←
+                  </a>
+                )}
+                {s.demoUrl && (
+                  <a
+                    href={s.demoUrl}
+                    className={`mt-2 inline-block text-sm font-medium underline-offset-4 hover:underline ${on ? "text-gold" : "text-gold-deep"}`}
+                    onClick={() => track("demo_click", { location: "services", demo: s.audience })}
+                  >
+                    לראות הדגמה חיה ←
+                  </a>
+                )}
+              </div>
+            </Reveal>
+          );
+        })}
       </ul>
 
       <Reveal>
-        <p className="mt-10 text-center text-navy/70">{servicesNote}</p>
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <ul className="mx-auto mt-8 grid max-w-4xl gap-4 rounded-2xl border border-navy/10 p-5 sm:grid-cols-3 sm:divide-x sm:divide-x-reverse sm:divide-navy/10">
+          {servicesStrip.map((it) => (
+            <li key={it.label} className="text-center">
+              <p className="text-sm text-navy/70">{it.label}</p>
+              <p className="mt-1 font-title text-xl font-medium text-gold-deep">{it.price}</p>
+              <p className="text-xs text-navy/55">{it.note}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-8 text-center text-navy/70">{servicesNote}</p>
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <WhatsAppCta variant="navy" className="w-full sm:w-auto" location="services" />
           <PhoneCta variant="navy" className="w-full sm:w-auto" location="services" />
         </div>
@@ -303,7 +393,7 @@ function Services() {
   );
 }
 
-/* 4ב. הדגמות חיות: שתי מערכות שאפשר לפתוח וללחוץ על הכול */
+/* 4ב. הדגמות חיות: שתי מערכות שאפשר לפתוח וללחוץ על הכול. העסק הוא השער "עסק". */
 function Demos() {
   return (
     <Section tone="navy" id="demos" labelledBy="demos-title" arches={false}>
@@ -320,7 +410,8 @@ function Demos() {
             as="li"
             key={d.id}
             delay={i * 150}
-            className="flex flex-col items-center gap-6 rounded-3xl border border-cream/15 bg-cream/5 p-7 sm:p-8"
+            id={d.id === "business" ? "business" : undefined}
+            className="flex scroll-mt-24 flex-col items-center gap-6 rounded-3xl border border-cream/15 bg-cream/5 p-7 sm:p-8"
           >
             <a
               href={d.url}
@@ -358,35 +449,7 @@ function Demos() {
   );
 }
 
-/* 5. איך עובדים איתי */
-function Process() {
-  return (
-    <Section tone="navy" id="process" labelledBy="process-title">
-      <Reveal>
-        <Heading id="process-title" eyebrow="איך עובדים איתי" title="ארבעה שלבים, בלי הפתעות" tone="navy" />
-      </Reveal>
-
-      <Reveal>
-        <ol className="relative mx-auto grid max-w-5xl gap-10 sm:grid-cols-4 sm:gap-6">
-          <div aria-hidden="true" className="process-line absolute right-0 top-7 hidden h-px w-full bg-gold/40 sm:block" />
-          {steps.map((step, i) => (
-            <li key={step.title} className="relative flex gap-5 sm:flex-col sm:items-center sm:text-center">
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-gold bg-navy font-title text-2xl text-gold">
-                {i + 1}
-              </span>
-              <div>
-                <h3 className="font-title text-2xl font-medium">{step.title}</h3>
-                <p className="mt-1 leading-relaxed text-cream/80">{step.text}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </Reveal>
-    </Section>
-  );
-}
-
-/* 5ב. מה מקבלים, ומה קורה ביום שאחרי */
+/* 5. מה מקבלים, ומה קורה ביום שאחרי */
 function DayAfter() {
   return (
     <Section tone="cream" id="day-after" labelledBy="day-after-title">
@@ -435,7 +498,7 @@ function DayAfter() {
   );
 }
 
-/* 5ג. היומן האישי הממותג: הפרויקט הקטן ביותר, לאדם אחד. הטלפון בסקשן חי: שם וצבע של המבקר. */
+/* 5ב. היומן האישי הממותג (השער "יומן אישי"): שם וצבע, הטלפון החי, מחיר ושני כפתורים. */
 function Journal() {
   const [brand, setBrand] = useState<Brand>(() => loadBrand() ?? DEFAULT_BRAND);
   const [named, setNamed] = useState(false);
@@ -469,11 +532,30 @@ function Journal() {
               <figcaption className="mt-2 text-sm text-cream/60">{journal.video.caption}</figcaption>
             </figure>
           )}
+          <p className="mt-6 max-w-2xl leading-relaxed text-cream/80">{journal.who}</p>
 
           <div className="mt-8 flex flex-wrap items-baseline gap-x-4 gap-y-1">
             <p className="font-title text-4xl font-medium text-gold">{journal.price}</p>
             <p className="text-sm text-cream/60">{journal.priceNote}</p>
           </div>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-cream/65">{journal.tiers}</p>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a href={demoHref} className="btn-whatsapp-gold w-full sm:w-auto" onClick={() => track("journal_demo_click", { location: "journal", named: !!name })}>
+              {name ? `לפתוח את היומן של ${name}` : journal.demoCta}
+            </a>
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-phone-cream w-full sm:w-auto"
+              onClick={() => track("whatsapp_click", { location: "journal", label: journal.cta, named: !!name })}
+            >
+              <WhatsAppIcon />
+              <span>{journal.cta}</span>
+            </a>
+          </div>
+          <p className="mt-3 text-sm text-cream/60">{journal.demoHint}</p>
         </Reveal>
 
         <Reveal delay={150} className="mx-auto w-full max-w-sm lg:w-auto">
@@ -526,50 +608,6 @@ function Journal() {
           </a>
         </Reveal>
       </div>
-
-      <Reveal className="mx-auto mt-10 max-w-6xl">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <a href={demoHref} className="btn-whatsapp-gold w-full sm:w-auto" onClick={() => track("journal_demo_click", { location: "journal", named: !!name })}>
-            {name ? `לפתוח את היומן של ${name}` : journal.demoCta}
-          </a>
-          <a
-            href={waHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-phone-cream w-full sm:w-auto"
-            onClick={() => track("whatsapp_click", { location: "journal", label: journal.cta, named: !!name })}
-          >
-            <WhatsAppIcon />
-            <span>{journal.cta}</span>
-          </a>
-        </div>
-        <p className="mt-3 text-sm text-cream/60">{journal.demoHint}</p>
-      </Reveal>
-
-      <Reveal className="mx-auto mt-14 max-w-6xl">
-        <p className="max-w-3xl text-lg leading-relaxed text-cream/85">{journal.who}</p>
-        <ul className="mt-5 flex flex-wrap gap-2" aria-label="מה יש בפנים">
-          {journal.inside.map((it) => (
-            <li key={it} className="rounded-full border border-cream/20 bg-cream/5 px-4 py-1.5 text-sm text-cream/85">
-              {it}
-            </li>
-          ))}
-        </ul>
-      </Reveal>
-
-      <Reveal className="mx-auto mt-8 max-w-6xl">
-        <ol className="grid gap-4 sm:grid-cols-2">
-          {journal.tiers.map((t) => (
-            <li key={t.price} className="flex gap-4 rounded-2xl border border-gold/40 p-6">
-              <p className="shrink-0 font-title text-2xl font-medium text-gold">{t.price}</p>
-              <div>
-                <p className="font-title text-xl font-medium">{t.title}</p>
-                <p className="mt-1 leading-relaxed text-cream/75">{t.text}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </Reveal>
     </Section>
   );
 }

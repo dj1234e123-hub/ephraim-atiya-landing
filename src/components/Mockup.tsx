@@ -56,3 +56,31 @@ export function BusinessMockup() {
     </div>
   );
 }
+
+/** אותו טלפון, עם מסך של מערכת למוסד: תלמידים, גבייה, ומה מחכה להנהלה היום. */
+export function MosadMockup() {
+  return (
+    <div className="mockup" aria-label="הדמיה של מערכת ניהול למוסד בטלפון" role="img">
+      <div className="mockup-phone">
+        <div className="mockup-screen">
+          <div className="mockup-top">
+            <span className="mockup-title">ישיבת אור חיים · היום</span>
+            <span className="mockup-badge">הדמיה</span>
+          </div>
+          <div className="mockup-stats">
+            <div className="mockup-stat"><b>214</b><span>תלמידים</span></div>
+            <div className="mockup-stat"><b>₪38,200</b><span>נגבה החודש</span></div>
+            <div className="mockup-stat"><b>7</b><span>הו״ק שנכשלו</span></div>
+          </div>
+          <ul className="mockup-list">
+            <li><i className="dot on" />קבלות לתורמי חודש תשרי<span>נשלחו</span></li>
+            <li><i className="dot on" />שיבוץ שיעור ב׳: 3 תלמידים חדשים<span>בוצע</span></li>
+            <li><i className="dot" />הודעה להורים: סדר יום לצום<span>טיוטה</span></li>
+            <li><i className="dot" />דוח חודשי לוועד<span>יום ה׳</span></li>
+          </ul>
+          <div className="mockup-cta">+ תלמיד · + תרומה · הודעה לצוות</div>
+        </div>
+      </div>
+    </div>
+  );
+}

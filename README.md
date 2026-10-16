@@ -5,6 +5,7 @@
 - Vite + React + TypeScript + Tailwind CSS
 - הצבעים והפונטים של המותג: `tailwind.config.ts`
 - כל התוכן: `src/content.ts`
+- ארבעת השערים בכותרת (בית כנסת, מוסד, עסק, יומן): `src/audience.ts`. הבחירה נשמרת למבקר, מחליפה את הטלפון המודמה, ומכניסה לכל כפתורי הוואטסאפ הודעה מוכנה לפי הקהל.
 - הלוגו (SVG בקוד): `src/components/Logo.tsx`
 
 ```bash
