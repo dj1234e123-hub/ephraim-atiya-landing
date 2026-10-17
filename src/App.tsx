@@ -645,8 +645,17 @@ function Story() {
           )}
         </Reveal>
         <Reveal>
-          <Heading id="story-title" eyebrow="אודות" title={story.title} tone="cream" align="start" />
-          {story.paragraphs.map((p) => (
+          <Heading id="story-title" eyebrow={story.eyebrow} title={story.title} tone="cream" align="start" />
+          <p className="mb-6 text-lg leading-relaxed text-navy/85 sm:text-xl">{story.intro}</p>
+          <ol className="mb-8 space-y-4">
+            {story.lessons.map((l) => (
+              <li key={l.title} className="border-r-2 border-gold-deep/60 pr-4">
+                <p className="font-title text-2xl font-medium text-navy">{l.title}</p>
+                <p className="mt-1 leading-relaxed text-navy/80">{l.text}</p>
+              </li>
+            ))}
+          </ol>
+          {story.outro.map((p) => (
             <p key={p} className="mb-5 text-lg leading-relaxed text-navy/85 sm:text-xl">
               {p}
             </p>
