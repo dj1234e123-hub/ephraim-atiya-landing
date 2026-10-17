@@ -27,7 +27,6 @@ import {
   mosad,
   PHONE_DISPLAY,
   PHONE_TEL,
-  promise,
   services,
   servicesNote,
   servicesStrip,
@@ -59,7 +58,6 @@ export default function App() {
       <main id="top">
         <Hero />
         <Facts />
-        <Promise />
         <GabbaiWeek />
         <Mosad />
         <Services />
@@ -179,7 +177,7 @@ function AudienceMockup({ audience, location }: { audience: Audience | null; loc
     shul: { href: DEMO_URL, label: "לפתוח את ההדגמה ולנסות בעצמכם" },
     business: { href: BUSINESS_DEMO_URL, label: "לפתוח את הדגמת העסק ולנסות בעצמכם" },
     journal: { href: demoUrl(JOURNAL_DEMO_URL, loadBrand() ?? DEFAULT_BRAND), label: "לפתוח את הדגמת היומן" },
-    mosad: { href: "#mosad", label: "למוסד אין הדגמה כללית. מה כן יש: למטה" },
+    mosad: { href: "#mosad", label: "כל מוסד שונה, אז בונים אחרי אפיון. מה המערכת מחזיקה ←" },
   };
   return (
     <>
@@ -240,39 +238,6 @@ function Facts() {
   );
 }
 
-/* 2. הבעיה ← ההבטחה */
-function Promise() {
-  return (
-    <Section tone="cream" id="promise" labelledBy="promise-title">
-      <Reveal>
-        <Heading id="promise-title" eyebrow="למוסדות, קהילות ועסקים" title={promise.title} tone="cream" />
-        <p className="mx-auto mb-14 max-w-2xl text-center text-lg leading-relaxed text-navy/80">{brand.essence}</p>
-      </Reveal>
-
-      <ul className="grid grid-cols-2 gap-3 sm:gap-5">
-        {promise.pairs.map((pair, i) => (
-          <Reveal as="li" key={pair.promise} delay={i * 100} className="card-lift rounded-2xl bg-white/60 p-4 shadow-card ring-1 ring-navy/5 sm:p-7">
-            <p className="text-sm text-navy/60 sm:text-base">{pair.problem}</p>
-            <div className="my-3 flex items-center gap-3 sm:my-4" aria-hidden="true">
-              <span className="h-px flex-1 bg-gold-deep/40" />
-              <ArrowLeft className="h-5 w-5 text-gold-deep" />
-            </div>
-            <p className="font-title text-xl font-medium text-navy sm:text-2xl">{pair.promise}</p>
-          </Reveal>
-        ))}
-      </ul>
-    </Section>
-  );
-}
-
-function ArrowLeft({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
-      <path d="M19 12H5M11 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 /* 2ב. השבוע של גבאי: הכאב האחד וההבטחה (השער "בית כנסת") */
 function GabbaiWeek() {
   return (
@@ -328,27 +293,27 @@ function Quote({ t, tone }: { t: Testimonial; tone: "navy" | "cream" }) {
 /* 2ג. למנהלי מוסדות (השער "מוסד"): בלי הדגמה כללית, אז קצר וישר */
 function Mosad() {
   return (
-    <Section tone="navy" id="mosad" labelledBy="mosad-title" arches={false} className="border-t border-gold/25">
+    <Section tone="cream" id="mosad" labelledBy="mosad-title" arches={false}>
       <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:gap-16">
         <Reveal>
-          <Heading id="mosad-title" eyebrow={mosad.eyebrow} title={mosad.title} tone="navy" align="start" />
-          <p className="text-lg leading-relaxed text-cream/85 sm:text-xl">{mosad.intro}</p>
-          <p className="mt-6 border-r-2 border-gold/60 pr-4 text-base leading-relaxed text-cream/70">{mosad.next}</p>
+          <Heading id="mosad-title" eyebrow={mosad.eyebrow} title={mosad.title} tone="cream" align="start" />
+          <p className="text-lg leading-relaxed text-navy/85 sm:text-xl">{mosad.intro}</p>
+          <p className="mt-6 border-r-2 border-gold-deep/60 pr-4 text-base leading-relaxed text-navy/70">{mosad.next}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <WhatsAppCta className="w-full sm:w-auto" label={mosad.cta} location="mosad" audience="mosad" />
-            <PhoneCta className="w-full sm:w-auto" location="mosad" />
+            <WhatsAppCta variant="navy" className="w-full sm:w-auto" label={mosad.cta} location="mosad" audience="mosad" />
+            <PhoneCta variant="navy" className="w-full sm:w-auto" location="mosad" />
           </div>
         </Reveal>
 
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 lg:pt-14">
           {mosad.points.map((p, i) => (
-            <Reveal as="li" key={p.title} delay={i * 100} className="flex gap-4 rounded-2xl border border-cream/15 bg-cream/5 p-5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/70 font-title text-lg text-gold">
+            <Reveal as="li" key={p.title} delay={i * 100} className="card-lift flex gap-4 rounded-2xl bg-white/60 p-5 shadow-card ring-1 ring-navy/5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold-deep font-title text-lg text-gold-deep">
                 {i + 1}
               </span>
               <div>
-                <p className="font-title text-xl font-medium text-gold">{p.title}</p>
-                <p className="mt-1 leading-relaxed text-cream/80">{p.text}</p>
+                <p className="font-title text-xl font-medium text-navy">{p.title}</p>
+                <p className="mt-1 leading-relaxed text-navy/75">{p.text}</p>
               </div>
             </Reveal>
           ))}

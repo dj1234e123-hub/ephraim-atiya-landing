@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9">
   <url><loc>https://ephraim-atiya.com/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://ephraim-atiya.com/journal/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://ephraim-atiya.com/terms/</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://ephraim-atiya.com/accessibility/</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
 </urlset>
