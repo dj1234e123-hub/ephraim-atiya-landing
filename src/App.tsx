@@ -626,14 +626,23 @@ function Story() {
     <Section tone="cream" id="story" labelledBy="story-title">
       <div className="mx-auto grid max-w-4xl items-start gap-10 md:grid-cols-[auto_1fr]">
         <Reveal className="mx-auto md:mx-0 md:pt-2">
-          <img
-            src="/ephraim.jpg"
-            width={560}
-            height={560}
-            alt="אפרים עטיה"
-            loading="lazy"
-            className="h-40 w-40 rounded-full object-cover ring-2 ring-gold-deep ring-offset-4 ring-offset-cream sm:h-48 sm:w-48"
-          />
+          {story.photo.src ? (
+            <img
+              src={story.photo.src}
+              alt={story.photo.alt}
+              loading="lazy"
+              className="w-56 rounded-2xl object-cover shadow-card ring-1 ring-navy/10 sm:w-64"
+            />
+          ) : (
+            <img
+              src="/ephraim.jpg"
+              width={560}
+              height={560}
+              alt="אפרים עטיה"
+              loading="lazy"
+              className="h-40 w-40 rounded-full object-cover ring-2 ring-gold-deep ring-offset-4 ring-offset-cream sm:h-48 sm:w-48"
+            />
+          )}
         </Reveal>
         <Reveal>
           <Heading id="story-title" eyebrow="אודות" title={story.title} tone="cream" align="start" />
